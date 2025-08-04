@@ -167,7 +167,39 @@
     <form action="https://formsubmit.co/reg.risingstar@gmail.com" method="POST">
       <!-- Hidden fields for FormSubmit -->
       <input type="hidden" name="_subject" value="New Competition Registration">
-      <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_template" value="custom">
+      <textarea name="_template_custom" style="display:none">
+        <table>
+          <tr>
+            <th>Competition Name</th>
+            <th>Application Type</th>
+            <th>Partner Name</th>
+            <th>Partner DOB</th>
+            <th>Partneress Name</th>
+            <th>Partneress DOB</th>
+            <th>Club Name</th>
+            <th>Categories</th>
+            <th>Contact Person</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Applicant Status</th>
+          </tr>
+          <tr>
+            <td>{{competition}}</td>
+            <td>{{application_type}}</td>
+            <td>{{partner_name}}</td>
+            <td>{{partner_dob}}</td>
+            <td>{{partneress_name}}</td>
+            <td>{{partneress_dob}}</td>
+            <td>{{club}}</td>
+            <td>{{categories}}</td>
+            <td>{{contact_name}}</td>
+            <td>{{phone}}</td>
+            <td>{{email}}</td>
+            <td>{{applicant_status}}</td>
+          </tr>
+        </table>
+      </textarea>
       <input type="hidden" name="_autoresponse" value="Thank you for registering for EDC-2025! You have registered %partner-name%<% if application_type == 'couple' { %> and %partneress-name%<% } %> for %categories%. We look forward to seeing you!">
       <input type="hidden" name="_next" value="https://registration.ristar.co/edc/index.html">
       <input type="hidden" name="_captcha" value="true">
