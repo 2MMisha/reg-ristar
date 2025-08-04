@@ -83,6 +83,34 @@
       color: #555;
     }
 
+    .home-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #0077cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .home-link:hover {
+      background-color: #005fa3;
+    }
+
+    .loading-message,
+    .error-message,
+    .no-competitions {
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+
+    .error-message {
+      color: #d9534f;
+    }
+
     @media (max-width: 600px) {
       .event-item {
         flex-direction: column;
@@ -104,17 +132,83 @@
 <h1>📝 Rising Star Manager - Registration Menu</h1>
 <div class="block">
   <h2>✍️ Competition Registration</h2>
-  <div class="event-list">
-    <a class="event-item" href="edc-test/index.html">
-      <img src="logo.png" alt="Registration Logo" />
-      <div class="event-info">
-        <div class="event-title">EDC-TEST</div>
-        <div class="event-desc">Register for the test competition</div>
-      </div>
-    </a>
+  <div class="event-list" id="competitions-list">
+    <div class="loading-message">Loading competitions...</div>
   </div>
 </div>
-<a href="https://www.ristar.co">HOME</a>
+<a href="https://www.ristar.co" class="home-link">HOME</a>
+
+<script>
+  // Конфигурация
+  const REPO_OWNER = '2MMisha';
+  const REPO_NAME = 'reg-ristar';
+  const DEFAULT_DESCRIPTION = 'Dance competition registration';
+  const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images']; // Папки, которые нужно исключить
+
+  // Получаем список папок из GitHub API
+  async function getCompetitionFolders() {
+    const competitionsList = document.getElementById('competitions-list');
+    
+    try {
+      const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`);
+      
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      // Фильтруем только папки и исключаем технические директории
+      const folders = data.filter(item => 
+        item.type === 'dir' && 
+        !EXCLUDE_FOLDERS.includes(item.name.toLowerCase()) &&
+        !item.name.startsWith('.')
+      );
+      
+      // Очищаем список и добавляем кнопки
+      competitionsList.innerHTML = '';
+      
+      if (folders.length === 0) {
+        competitionsList.innerHTML = '<div class="no-competitions">No competitions available at the moment.</div>';
+        return;
+      }
+      
+      // Создаем кнопки для каждой папки
+      folders.forEach(folder => {
+        const eventItem = document.createElement('a');
+        eventItem.className = 'event-item';
+        eventItem.href = `${folder.name}/index.html`;
+        
+        // Форматируем название для отображения
+        const displayName = folder.name
+          .replace(/-/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
+        
+        eventItem.innerHTML = `
+          <img src="logo.png" alt="${displayName} Logo" />
+          <div class="event-info">
+            <div class="event-title">${displayName}</div>
+            <div class="event-desc">${DEFAULT_DESCRIPTION}</div>
+          </div>
+        `;
+        
+        competitionsList.appendChild(eventItem);
+      });
+      
+    } catch (error) {
+      console.error('Error fetching competitions:', error);
+      competitionsList.innerHTML = `
+        <div class="error-message">
+          Failed to load competitions. Please try again later.<br>
+          <small>${error.message}</small>
+        </div>
+      `;
+    }
+  }
+
+  // Загружаем список при открытии страницы
+  document.addEventListener('DOMContentLoaded', getCompetitionFolders);
+</script>
 
 </body>
 </html>
