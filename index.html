@@ -144,6 +144,7 @@
   const REPO_NAME = 'reg-ristar';
   const DEFAULT_DESCRIPTION = 'Dance competition registration';
   const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images']; // Папки, которые нужно исключить
+  const DEFAULT_LOGO = 'logo.png';
 
   // Получаем список папок из GitHub API
   async function getCompetitionFolders() {
@@ -174,7 +175,7 @@
       }
       
       // Создаем кнопки для каждой папки
-      folders.forEach(folder => {
+      for (const folder of folders) {
         const eventItem = document.createElement('a');
         eventItem.className = 'event-item';
         eventItem.href = `${folder.name}/index.html`;
@@ -184,8 +185,23 @@
           .replace(/-/g, ' ')
           .replace(/\b\w/g, l => l.toUpperCase());
         
+        // Проверяем наличие логотипа с именем папки
+        const logoName = `${folder.name}.png`;
+        let logoUrl = DEFAULT_LOGO;
+        
+        // Проверяем наличие файла логотипа в репозитории
+        try {
+          const logoCheck = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${logoName}`);
+          if (logoCheck.ok) {
+            const logoData = await logoCheck.json();
+            logoUrl = logoData.download_url;
+          }
+        } catch (e) {
+          console.log(`Logo ${logoName} not found, using default`);
+        }
+        
         eventItem.innerHTML = `
-          <img src="logo.png" alt="${displayName} Logo" />
+          <img src="${logoUrl}" alt="${displayName} Logo" onerror="this.src='${DEFAULT_LOGO}'" />
           <div class="event-info">
             <div class="event-title">${displayName}</div>
             <div class="event-desc">${DEFAULT_DESCRIPTION}</div>
@@ -193,7 +209,7 @@
         `;
         
         competitionsList.appendChild(eventItem);
-      });
+      }
       
     } catch (error) {
       console.error('Error fetching competitions:', error);
