@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="format-detection" content="telephone=no">
+  <title>Competition Registration</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+      position: relative;
+    }
+    .registration-form {
+      background-color: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 25px;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="date"],
+    input[type="email"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: #0077cc;
+      outline: none;
+    }
+    input[readonly] {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+    }
+    .categories {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .category-option {
+      display: flex;
+      align-items: center;
+    }
+    .category-option input {
+      margin-right: 10px;
+      min-width: 18px;
+      min-height: 18px;
+    }
+    button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 14px;
+      font-size: 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #0066b3;
+    }
+    .required:after {
+      content: " *";
+      color: red;
+    }
+    .divider {
+      border-top: 1px solid #ddd;
+      margin: 25px 0;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
+    .info-note {
+      background-color: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      border-left: 4px solid #0077cc;
+    }
+    .info-note a {
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .info-note a:hover {
+      text-decoration: underline;
+    }
+    .application-type {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .application-type-option {
+      display: flex;
+      align-items: center;
+    }
+    .application-type-option input {
+      margin-right: 8px;
+    }
+    .hidden {
+      display: none;
+    }
+
+    /* Медиа-запросы для адаптации */
+    @media (min-width: 480px) {
+      .categories {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 768px) {
+      body {
+        padding: 30px;
+      }
+      .registration-form {
+        padding: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="registration-form">
+    <h1>Competition Registration</h1>
+    
+    <div class="info-note">
+      <p>If you need to submit a large number of applications, please contact us at <a href="https://www.ristar.co/contact.html" target="_blank">www.ristar.co/contact.html</a></p>
+    </div>
+    
+    <form action="https://formsubmit.co/reg.risingstar@gmail.com" method="POST">
+      <!-- Hidden fields for FormSubmit -->
+      <input type="hidden" name="_subject" value="New Competition Registration">
+      <input type="hidden" name="_autoresponse" value="Thank you for registering for EDC-2025! You have registered %partner-name%<% if application_type == 'couple' { %> and %partneress-name%<% } %> for %categories%. We look forward to seeing you!">
+      <input type="hidden" name="_next" value="https://registration.ristar.co/EDC-2025/success.html">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_honey" value="" style="display:none">
+      <input type="hidden" name="_template" value="custom">
+      <textarea name="_template_custom" style="display:none">
+        <table>
+          <tr>
+            <th>Competition Name</th>
+            <th>Application Type</th>
+            <th>Partner Name</th>
+            <th>Partner DOB</th>
+            <th>Partneress Name</th>
+            <th>Partneress DOB</th>
+            <th>Club Name</th>
+            <th>Categories</th>
+            <th>Contact Person</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Applicant Status</th>
+          </tr>
+          <tr>
+            <td>{{competition}}</td>
+            <td>{{application_type}}</td>
+            <td>{{partner_name}}</td>
+            <td>{{partner_dob}}</td>
+            <td>{{partneress_name}}</td>
+            <td>{{partneress_dob}}</td>
+            <td>{{club}}</td>
+            <td>{{categories}}</td>
+            <td>{{contact_name}}</td>
+            <td>{{phone}}</td>
+            <td>{{email}}</td>
+            <td>{{applicant_status}}</td>
+          </tr>
+        </table>
+      </textarea>
+      
+      <div class="form-group">
+        <label for="competition" class="required">Competition Name</label>
+        <input type="text" id="competition" name="competition" value="MDA-2025" readonly>
+      </div>
+      
+      <div class="form-group">
+        <label class="required">Application Type</label>
+        <div class="application-type">
+          <div class="application-type-option">
+            <input type="radio" id="couple" name="application_type" value="couple" checked>
+            <label for="couple">Couple</label>
+          </div>
+          <div class="application-type-option">
+            <input type="radio" id="solo" name="application_type" value="solo">
+            <label for="solo">Solo</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group" id="partner-group">
+        <label for="partner-name" class="required">Partner Name (English)</label>
+        <input type="text" id="partner-name" name="partner-name" required>
+      </div>
+      
+      <div class="form-group" id="partner-dob-group">
+        <label for="partner-dob" class="required">Partner Date of Birth</label>
+        <input type="date" id="partner-dob" name="partner-dob" required>
+      </div>
+      
+      <div class="form-group partneress-group">
+        <label for="partneress-name" class="required">Partneress Name (English)</label>
+        <input type="text" id="partneress-name" name="partneress-name" required>
+      </div>
+      
+      <div class="form-group partneress-group">
+        <label for="partneress-dob" class="required">Partneress Date of Birth</label>
+        <input type="date" id="partneress-dob" name="partneress-dob" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="club" class="required">Club Name</label>
+        <input type="text" id="club" name="club" required>
+      </div>
+      
+      <div class="form-group">
+        <label class="required">Categories</label>
+        <div class="categories">
+          <div class="category-option">
+            <input type="checkbox" id="latin" name="categories[]" value="Latin">
+            <label for="latin">Latin</label>
+          </div>
+          <div class="category-option">
+            <input type="checkbox" id="standard" name="categories[]" value="Standard">
+            <label for="standard">Standard</label>
+          </div>
+          <div class="category-option">
+            <input type="checkbox" id="latin-skating" name="categories[]" value="Latin SKATING">
+            <label for="latin-skating">Latin SKATING</label>
+          </div>
+          <div class="category-option">
+            <input type="checkbox" id="standard-skating" name="categories[]" value="Standard SKATING">
+            <label for="standard-skating">Standard SKATING</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="divider"></div>
+      
+      <div class="section-title">Contact Information</div>
+      
+      <div class="form-group">
+        <label for="contact-name" class="required">Contact Person Name</label>
+        <input type="text" id="contact-name" name="contact-name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="phone" class="required">Phone Number (with country code)</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+1234567890">
+      </div>
+      
+      <div class="form-group">
+        <label for="email" class="required">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="applicant-status" class="required">Applicant Status</label>
+        <select id="applicant-status" name="applicant-status" required>
+          <option value="">Select status</option>
+          <option value="teacher">Teacher/Coach</option>
+          <option value="parent">Parent</option>
+          <option value="participant">Participant</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      
+      <button type="submit">Submit Registration</button>
+    </form>
+  </div>
+
+  <script>
+    // Toggle partner/partneress fields based on application type
+    document.querySelectorAll('input[name="application_type"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        const isSolo = this.value === 'solo';
+        document.querySelectorAll('.partneress-group').forEach(el => {
+          el.classList.toggle('hidden', isSolo);
+        });
+        
+        // Update required attribute for partneress fields
+        document.getElementById('partneress-name').required = !isSolo;
+        document.getElementById('partneress-dob').required = !isSolo;
+      });
+    });
+
+    // Form validation
+    document.querySelector('form').addEventListener('submit', function(e) {
+      const checkboxes = document.querySelectorAll('input[name="categories[]"]:checked');
+      if (checkboxes.length === 0) {
+        alert('Please select at least one category');
+        e.preventDefault();
+      }
+      
+      // Date of birth validation
+      const partnerDob = new Date(document.getElementById('partner-dob').value);
+      const today = new Date();
+      
+      if (partnerDob > today) {
+        alert('Partner date of birth cannot be in the future');
+        e.preventDefault();
+      }
+      
+      // Only validate partneress if it's a couple application
+      if (document.getElementById('couple').checked) {
+        const partneressDob = new Date(document.getElementById('partneress-dob').value);
+        if (partneressDob > today) {
+          alert('Partneress date of birth cannot be in the future');
+          e.preventDefault();
+        }
+      }
+    });
+
+    // Mobile optimization for date inputs
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+      document.querySelectorAll('input[type="date"]').forEach(input => {
+        input.addEventListener('focus', function() {
+          this.type = 'date';
+        });
+      });
+    }
+  </script>
+</body>
+</html>
