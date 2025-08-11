@@ -32,13 +32,12 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s;
             border: 1px solid #e0e0e0;
         }
         .competition-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-            border-color: #3498db;
         }
         .logo-container {
             width: 100%;
@@ -49,7 +48,6 @@
             margin-bottom: 15px;
             background-color: #f5f7fa;
             border-radius: 6px;
-            overflow: hidden;
         }
         .competition-logo {
             max-width: 90%;
@@ -67,6 +65,7 @@
             margin-bottom: 20px;
             font-size: 0.95em;
             line-height: 1.5;
+            white-space: pre-line;
         }
         .register-btn {
             display: block;
@@ -76,12 +75,11 @@
             padding: 12px;
             border-radius: 6px;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: background 0.3s;
             font-weight: 500;
         }
         .register-btn:hover {
             background: #2980b9;
-            transform: translateY(-2px);
         }
         .loading {
             text-align: center;
@@ -110,10 +108,7 @@
     <div class="container">
         <h1>Competition Registration Portal</h1>
         <div id="competitions-container">
-            <div class="loading">
-                <div>Loading available competitions...</div>
-                <div style="margin-top: 20px; font-size: 0.9em; color: #bdc3c7;">Fetching data</div>
-            </div>
+            <div class="loading">Loading competitions...</div>
         </div>
         <div id="last-updated" class="last-updated"></div>
     </div>
@@ -122,45 +117,38 @@
         document.addEventListener('DOMContentLoaded', async function() {
             const container = document.getElementById('competitions-container');
             const lastUpdatedEl = document.getElementById('last-updated');
-            const repo = '2MMisha/reg-ristar';
-            const defaultLogo = 'logo.png';
             
-            // 1. Загружаем список конкурсов через GitHub Pages
             try {
-                const response = await fetch('/reg-ristar/competitions.json?t=' + Date.now());
-                
-                if (!response.ok) throw new Error('Server response: ' + response.status);
+                const response = await fetch('competitions.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Server error: ' + response.status);
                 
                 const competitions = await response.json();
                 
-                if (!competitions || competitions.length === 0) {
-                    throw new Error('No competitions found in data file');
+                if (!Array.isArray(competitions)) {
+                    throw new Error('Invalid data format');
                 }
 
-                // 2. Создаем карточки
                 let html = '<div class="competitions-grid">';
                 
-                for (const comp of competitions) {
-                    const compName = comp.name.replace(/\$/g, ' ');
-                    const logoUrl = `/reg-ristar/${comp.logo || defaultLogo}`;
-                    const registerUrl = `/reg-ristar/${comp.path}/`;
+                competitions.forEach(comp => {
+                    const displayName = comp.name.replace(/\$/g, ' ');
                     
                     html += `
                         <div class="competition-card">
                             <div class="logo-container">
-                                <img src="${logoUrl}" 
-                                     alt="${compName}" 
+                                <img src="${comp.logo}" 
+                                     alt="${displayName}" 
                                      class="competition-logo"
-                                     onerror="this.src='/reg-ristar/${defaultLogo}'; this.style.maxHeight='70%'">
+                                     onerror="this.src='logo.png'; this.style.maxHeight='70%'">
                             </div>
-                            <h3 class="competition-name">${compName}</h3>
-                            <p class="competition-description">${comp.description || 'Registration is open'}</p>
-                            <a href="${registerUrl}" class="register-btn" target="_blank">
+                            <h3 class="competition-name">${displayName}</h3>
+                            <p class="competition-description">${comp.description || 'Registration available'}</p>
+                            <a href="${comp.regUrl}" class="register-btn">
                                 Register Now →
                             </a>
                         </div>
                     `;
-                }
+                });
                 
                 container.innerHTML = html + '</div>';
                 lastUpdatedEl.textContent = `Last updated: ${new Date().toLocaleString()}`;
@@ -169,9 +157,8 @@
                 console.error('Error:', error);
                 container.innerHTML = `
                     <div class="error">
-                        <strong>Error loading competitions</strong><br><br>
-                        ${error.message}<br><br>
-                        <small>Try refreshing the page</small>
+                        Failed to load competitions:<br>
+                        ${error.message}
                     </div>
                 `;
             }
