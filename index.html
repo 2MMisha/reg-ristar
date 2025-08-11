@@ -181,9 +181,10 @@
         eventItem.href = `${folder.name}/index.html`;
         
         // Форматируем название для отображения
-        const displayName = folder.name
-          .replace(/-/g, ' ')
-          .replace(/\b\w/g, l => l.toUpperCase());
+       // Форматируем название для отображения: заменяем ТОЛЬКО $ на пробелы
+const displayName = folder.name
+  .replace(/\$/g, ' ')  // Только знаки доллара → пробелы
+  .replace(/\b\w/g, l => l.toUpperCase()); // Первая буква каждого слова заглавная
         
         // Проверяем наличие логотипа с именем папки
         const logoName = `${folder.name}.png`;
