@@ -120,10 +120,6 @@
       .event-item img {
         margin: 0 0 10px 0;
       }
-
-      .event-info {
-        text-align: left;
-      }
     }
   </style>
 </head>
@@ -143,62 +139,51 @@
   const REPO_OWNER = '2MMisha';
   const REPO_NAME = 'reg-ristar';
   const DEFAULT_DESCRIPTION = 'Dance competition registration';
-  const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images']; // Папки, которые нужно исключить
+  const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images'];
   const DEFAULT_LOGO = 'logo.png';
 
-  // Получаем список папок из GitHub API
+  // Загрузка списка папок-конкурсов
   async function getCompetitionFolders() {
     const competitionsList = document.getElementById('competitions-list');
     
     try {
       const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`);
-      
-      if (!response.ok) {
-        throw new Error(`GitHub API error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
       
       const data = await response.json();
-      
-      // Фильтруем только папки и исключаем технические директории
       const folders = data.filter(item => 
         item.type === 'dir' && 
         !EXCLUDE_FOLDERS.includes(item.name.toLowerCase()) &&
         !item.name.startsWith('.')
       );
       
-      // Очищаем список и добавляем кнопки
       competitionsList.innerHTML = '';
-      
       if (folders.length === 0) {
-        competitionsList.innerHTML = '<div class="no-competitions">No competitions available at the moment.</div>';
+        competitionsList.innerHTML = '<div class="no-competitions">No competitions available.</div>';
         return;
       }
       
-      // Создаем кнопки для каждой папки
+      // Создаем карточки для каждой папки
       for (const folder of folders) {
         const eventItem = document.createElement('a');
         eventItem.className = 'event-item';
-        eventItem.href = `${folder.name}/index.html`;
+        eventItem.href = `${folder.name}/index.html`;  // Ссылка остается с оригинальным именем
         
-        // Форматируем название для отображения
-       // Форматируем название для отображения: заменяем ТОЛЬКО $ на пробелы
-const displayName = folder.name
-  .replace(/\$/g, ' ')  // Только знаки доллара → пробелы
-  .replace(/\b\w/g, l => l.toUpperCase()); // Первая буква каждого слова заглавная
+        // Форматируем название: $ → пробел, первая буква заглавная
+        const displayName = folder.name
+          .replace(/\$/g, ' ')
+          .replace(/\b\w/g, l => l.toUpperCase());
         
-        // Проверяем наличие логотипа с именем папки
-        const logoName = `${folder.name}.png`;
+        // Пытаемся загрузить логотип
         let logoUrl = DEFAULT_LOGO;
-        
-        // Проверяем наличие файла логотипа в репозитории
         try {
-          const logoCheck = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${logoName}`);
+          const logoCheck = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${folder.name}.png`);
           if (logoCheck.ok) {
             const logoData = await logoCheck.json();
             logoUrl = logoData.download_url;
           }
         } catch (e) {
-          console.log(`Logo ${logoName} not found, using default`);
+          console.log(`Logo for ${folder.name} not found, using default`);
         }
         
         eventItem.innerHTML = `
@@ -211,9 +196,8 @@ const displayName = folder.name
         
         competitionsList.appendChild(eventItem);
       }
-      
     } catch (error) {
-      console.error('Error fetching competitions:', error);
+      console.error('Error:', error);
       competitionsList.innerHTML = `
         <div class="error-message">
           Failed to load competitions. Please try again later.<br>
@@ -223,7 +207,7 @@ const displayName = folder.name
     }
   }
 
-  // Загружаем список при открытии страницы
+  // Запуск при загрузке страницы
   document.addEventListener('DOMContentLoaded', getCompetitionFolders);
 </script>
 
