@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dance Competition Results</title>
+  <title>Dance Competition Registration</title>
   <link rel="icon" href="/static/web.ico" type="image/x-icon" />
   <style>
     body {
@@ -83,6 +83,22 @@
       color: #555;
     }
 
+    .register-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .register-btn:hover {
+      background-color: #218838;
+    }
+
     .home-link {
       display: inline-block;
       margin-top: 20px;
@@ -126,6 +142,12 @@
       font-size: 1.2rem;
     }
 
+    .event-date {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
     @media (max-width: 600px) {
       .event-item {
         flex-direction: column;
@@ -140,77 +162,89 @@
 </head>
 <body>
 
-<h1>🏆 Rising Star Manager - Results Menu</h1>
+<h1>📝 Rising Star Manager - Registration</h1>
 <div class="block">
-  <h2>📊 Competition Results Gallery</h2>
+  <h2>✍️ Competition Registration</h2>
   
-  <div class="notification" id="results-notification">
-    <span class="notification-icon">⏳</span>
+  <div class="notification" id="registration-notification">
+    <span class="notification-icon">ℹ️</span>
     <div>
-      <strong>Important:</strong> New competitions appear within 2 hours after announcement.
-      Results are updated automatically every hour.
+      <strong>Registration Info:</strong> New competitions appear here within 1 hour after announcement. 
+      Please check back later if you don't see your event.
     </div>
   </div>
   
-  <div class="event-list" id="results-list">
-    <div class="loading-message">Loading competitions...</div>
+  <div class="event-list" id="registration-list">
+    <div class="loading-message">Loading available competitions...</div>
   </div>
 </div>
 <a href="https://www.ristar.co" class="home-link">HOME</a>
 
 <script>
   // Configuration
-  const DATA_FILE = 'data/competitions.json';
+  const REPO_OWNER = '2MMisha';
+  const REPO_NAME = 'reg-ristar';
+  const DEFAULT_DESCRIPTION = 'Competition registration';
+  const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images', 'data'];
   const DEFAULT_LOGO = 'logo.png';
   const REFRESH_INTERVAL = 300000; // 5 minutes
+  const DATA_FILE = 'data/competitions.json';
 
-  async function loadCompetitions() {
+  async function loadRegistrations() {
+    const registrationList = document.getElementById('registration-list');
+    const notification = document.getElementById('registration-notification');
+
     try {
       const response = await fetch(`${DATA_FILE}?t=${Date.now()}`);
-      if (!response.ok) throw new Error('Failed to load data');
+      if (!response.ok) throw new Error('Failed to load registration data');
       
       const competitions = await response.json();
-      const resultsList = document.getElementById('results-list');
+      
+      registrationList.innerHTML = '';
       
       if (!competitions || competitions.length === 0) {
-        resultsList.innerHTML = `
+        registrationList.innerHTML = `
           <div class="no-competitions">
-            No active competitions found. Please check back later.
+            No registration forms available at the moment. Please check back later.
           </div>
         `;
+        notification.style.display = 'flex';
         return;
       }
 
-      resultsList.innerHTML = competitions.map(comp => `
-        <a href="${comp.path}/index.html" class="event-item">
-          <img src="${comp.logo || DEFAULT_LOGO}" 
-               alt="${comp.name}" 
-               onerror="this.src='${DEFAULT_LOGO}'"/>
+      competitions.forEach(comp => {
+        const eventItem = document.createElement('div');
+        eventItem.className = 'event-item';
+        
+        eventItem.innerHTML = `
+          <img src="${comp.logo || DEFAULT_LOGO}" alt="${comp.name}" onerror="this.src='${DEFAULT_LOGO}'" />
           <div class="event-info">
             <div class="event-title">${comp.name}</div>
-            <div class="event-desc">${comp.description || 'Dance competition results'}</div>
+            <div class="event-desc">${comp.description || DEFAULT_DESCRIPTION}</div>
+            <a href="${comp.registration_form}" class="register-btn">Register Now</a>
           </div>
-        </a>
-      `).join('');
+        `;
+        
+        registrationList.appendChild(eventItem);
+      });
 
-      // Hide notification if data loaded successfully
-      document.getElementById('results-notification').style.display = 'none';
+      notification.style.display = 'none';
 
     } catch (error) {
-      console.error('Loading error:', error);
-      document.getElementById('results-list').innerHTML = `
+      console.error('Registration loading error:', error);
+      registrationList.innerHTML = `
         <div class="error-message">
-          Temporary server issue. Please refresh the page.<br>
+          Failed to load registration forms. Please try again later.<br>
           <small>${error.message}</small>
         </div>
       `;
+      notification.style.display = 'flex';
     }
   }
 
-  // Initial load
   document.addEventListener('DOMContentLoaded', () => {
-    loadCompetitions();
-    setInterval(loadCompetitions, REFRESH_INTERVAL);
+    loadRegistrations();
+    setInterval(loadRegistrations, REFRESH_INTERVAL);
   });
 </script>
 
