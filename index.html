@@ -6,7 +6,6 @@
   <title>Dance Competition Registration</title>
   <link rel="icon" href="/static/web.ico" type="image/x-icon" />
   <style>
-    /* Ваши стили остаются без изменений */
     body {
       font-family: Arial, sans-serif;
       padding: 30px 20px;
@@ -15,7 +14,150 @@
       max-width: 1000px;
       margin: 0 auto;
     }
-    /* ... остальные стили ... */
+
+    h1 {
+      margin-bottom: 24px;
+      font-size: 2rem;
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .block {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px 25px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+      color: #0077cc;
+    }
+
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .event-item {
+      display: flex;
+      align-items: center;
+      background: #f0f8ff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      transition: background-color 0.3s;
+      text-decoration: none;
+      color: inherit;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .event-item:hover {
+      background-color: #e6f3ff;
+    }
+
+    .event-item img {
+      width: 60px;
+      height: 60px;
+      border-radius: 8px;
+      margin-right: 16px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .event-info {
+      flex-grow: 1;
+    }
+
+    .event-title {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #0077cc;
+    }
+
+    .event-desc {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .register-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      transition: background-color 0.3s;
+    }
+
+    .register-btn:hover {
+      background-color: #218838;
+    }
+
+    .home-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 15px;
+      background: #0077cc;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    .home-link:hover {
+      background-color: #005fa3;
+    }
+
+    .loading-message,
+    .error-message,
+    .no-competitions {
+      padding: 15px;
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+
+    .error-message {
+      color: #d9534f;
+    }
+
+    .notification {
+      background-color: #fff3cd;
+      border-left: 5px solid #ffc107;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+    }
+
+    .notification-icon {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+
+    .event-date {
+      font-size: 0.85rem;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .event-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .event-item img {
+        margin: 0 0 10px 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -25,9 +167,9 @@
   <h2>✍️ Competition Registration</h2>
   
   <div class="notification" id="registration-notification">
-    <span class="notification-icon">ℹ️</span>
+    <span class="notification-icon">⏳</span>
     <div>
-      <strong>Registration Info:</strong> New competitions appear here within 1 hour after announcement. 
+      <strong>Registration Info:</strong> New competitions appear here within 2 hours after announcement. 
       Please check back later if you don't see your event.
     </div>
   </div>
@@ -42,78 +184,51 @@
   // Configuration
   const REPO_OWNER = '2MMisha';
   const REPO_NAME = 'reg-ristar';
-  const DEFAULT_DESCRIPTION = 'Competition registration';
+  const DEFAULT_DESCRIPTION = 'Dance competition registration';
   const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images', 'data'];
   const DEFAULT_LOGO = 'logo.png';
   const REFRESH_INTERVAL = 300000; // 5 minutes
-  const DATA_FILE = 'data/competitions.json';
+  const MIN_HOURS_VISIBLE = 2; // Minimum hours to display after creation
+  const DATA_FILE = 'data/registrations.json';
 
-  // Дефолтные данные на случай проблем с загрузкой
-  const DEFAULT_COMPETITIONS = [
-    {
-      "name": "Example Competition",
-      "description": "Sample competition for testing",
-      "registration_form": "/example/register.html",
-      "logo": "example.png"
-    }
-  ];
+  // Cache for competition data
+  const competitionCache = {};
 
   async function loadRegistrations() {
     const registrationList = document.getElementById('registration-list');
     const notification = document.getElementById('registration-notification');
 
     try {
-      const response = await fetch(`${DATA_FILE}?t=${Date.now()}`);
-      let competitions;
+      // Show notification during loading
+      notification.style.display = 'flex';
       
-      if (!response.ok) {
-        throw new Error('Failed to load data, using default');
-      }
-
-      try {
-        competitions = await response.json();
-        // Проверяем, что это массив
-        if (!Array.isArray(competitions)) {
-          throw new Error('Invalid data format');
+      // Check cache first
+      const cachedResponse = sessionStorage.getItem('registrationsCache');
+      if (cachedResponse) {
+        const { data, timestamp } = JSON.parse(cachedResponse);
+        if (Date.now() - timestamp < REFRESH_INTERVAL) {
+          displayRegistrations(data);
+          return;
         }
-      } catch (e) {
-        console.warn('Using default competitions due to JSON error:', e);
-        competitions = DEFAULT_COMPETITIONS;
-      }
-      
-      registrationList.innerHTML = '';
-      
-      if (!competitions || competitions.length === 0) {
-        registrationList.innerHTML = `
-          <div class="no-competitions">
-            No registration forms available at the moment. Please check back later.
-          </div>
-        `;
-        notification.style.display = 'flex';
-        return;
       }
 
-      competitions.forEach(comp => {
-        const eventItem = document.createElement('div');
-        eventItem.className = 'event-item';
-        
-        eventItem.innerHTML = `
-          <img src="${comp.logo || DEFAULT_LOGO}" alt="${comp.name}" onerror="this.src='${DEFAULT_LOGO}'" />
-          <div class="event-info">
-            <div class="event-title">${comp.name}</div>
-            ${comp.date ? `<div class="event-date">📅 ${comp.date}</div>` : ''}
-            <div class="event-desc">${comp.description || DEFAULT_DESCRIPTION}</div>
-            <a href="${comp.registration_form}" class="register-btn">Register Now</a>
-          </div>
-        `;
-        
-        registrationList.appendChild(eventItem);
-      });
+      // Fetch data from GitHub
+      const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${DATA_FILE}`);
+      if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
 
-      notification.style.display = 'none';
+      const data = await response.json();
+      const content = JSON.parse(atob(data.content));
+      
+      // Save to cache
+      sessionStorage.setItem('registrationsCache', JSON.stringify({
+        data: content,
+        timestamp: Date.now()
+      }));
+
+      displayRegistrations(content);
 
     } catch (error) {
-      console.error('Registration loading error:', error);
+      console.error('Error loading registrations:', error);
       registrationList.innerHTML = `
         <div class="error-message">
           Failed to load registration forms. Please try again later.<br>
@@ -122,6 +237,78 @@
       `;
       notification.style.display = 'flex';
     }
+  }
+
+  function displayRegistrations(competitions) {
+    const registrationList = document.getElementById('registration-list');
+    const notification = document.getElementById('registration-notification');
+
+    registrationList.innerHTML = '';
+
+    if (!competitions || competitions.length === 0) {
+      registrationList.innerHTML = '<div class="no-competitions">No registration forms available at the moment.</div>';
+      notification.style.display = 'flex';
+      return;
+    }
+
+    let hasRecentCompetitions = false;
+    const now = new Date();
+
+    competitions.forEach(comp => {
+      const createdTime = new Date(comp.created_at || now);
+      const hoursSinceCreation = (now - createdTime) / (1000 * 60 * 60);
+      
+      if (hoursSinceCreation < MIN_HOURS_VISIBLE) {
+        hasRecentCompetitions = true;
+        return;
+      }
+
+      const eventItem = document.createElement('div');
+      eventItem.className = 'event-item';
+      
+      // Format display name
+      const displayName = comp.name
+        .replace(/\$/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+
+      // Check cache for logo
+      const logoName = `${comp.id || comp.name.toLowerCase().replace(/\s+/g, '-')}.png`;
+      let logoUrl = comp.logo || DEFAULT_LOGO;
+
+      if (competitionCache[comp.name]?.logo) {
+        logoUrl = competitionCache[comp.name].logo;
+      } else {
+        // Try to load logo
+        fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${logoName}`)
+          .then(logoCheck => {
+            if (logoCheck.ok) {
+              return logoCheck.json().then(logoData => {
+                competitionCache[comp.name] = {
+                  logo: logoData.download_url,
+                  timestamp: Date.now()
+                };
+                const img = eventItem.querySelector('img');
+                if (img) img.src = logoData.download_url;
+              });
+            }
+          })
+          .catch(e => console.log(`Logo ${logoName} not found`));
+      }
+
+      eventItem.innerHTML = `
+        <img src="${logoUrl}" alt="${displayName} Logo" onerror="this.src='${DEFAULT_LOGO}'" />
+        <div class="event-info">
+          <div class="event-title">${displayName}</div>
+          ${comp.date ? `<div class="event-date">📅 ${comp.date}</div>` : ''}
+          <div class="event-desc">${comp.description || DEFAULT_DESCRIPTION}</div>
+          <a href="${comp.registration_link}" class="register-btn">Register Now</a>
+        </div>
+      `;
+      
+      registrationList.appendChild(eventItem);
+    });
+
+    notification.style.display = hasRecentCompetitions ? 'flex' : 'none';
   }
 
   document.addEventListener('DOMContentLoaded', () => {
