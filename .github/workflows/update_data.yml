@@ -1,8 +1,10 @@
 name: Update Competition Data
 on:
   schedule:
-    - cron: '0 * * * *'  # Каждый час
-  workflow_dispatch:     # Ручной запуск
+    - cron: '0 * * * *'  # Every hour
+  workflow_dispatch:     # Manual trigger
+  push:
+    branches: [ main ]
 
 jobs:
   update:
@@ -10,14 +12,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch API data
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install pygithub python-dateutil
+
+      - name: Generate competition data
         run: |
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          "https://api.github.com/repos/${{ github.repository }}/contents" \
-          | jq 'map(select(.type == "dir" and 
-            (["images",".github",".git","data"] | index(.name | ascii_downcase) | not)))' \
-          > data/competitions.json
+          python <<EOF
+          from github import Github
+          from datetime import datetime, timedelta
+          import json
+          import os
+
+          g = Github(os.getenv('GITHUB_TOKEN'))
+          repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
+          
+          competitions = []
+          excluded = ['.github', '.git', 'static', 'data', 'images']
+          
+          for content in repo.get_contents(""):
+              if content.type == "dir" and content.name.lower() not in excluded:
+                  try:
+                      logo = repo.get_contents(f"{content.name}.png").download_url
+                  except:
+                      logo = None
+                  
+                  competitions.append({
+                      "name": content.name.replace('_', ' ').title(),
+                      "path": content.name,
+                      "logo": logo,
+                      "updated_at": content.last_modified.isoformat()
+                  })
+          
+          os.makedirs('data', exist_ok=True)
+          with open('data/competitions.json', 'w') as f:
+              json.dump(competitions, f, indent=2)
+          EOF
 
       - name: Commit changes
         run: |
