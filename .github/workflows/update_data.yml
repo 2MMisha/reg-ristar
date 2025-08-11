@@ -1,4 +1,4 @@
-name: Update Competition Data
+name: Update Registration Data
 on:
   schedule:
     - cron: '0 * * * *'  # Every hour
@@ -11,52 +11,39 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
-        run: pip install pygithub python-dateutil
-
-      - name: Generate competition data
+      - name: Generate registration data
         run: |
-          python <<EOF
-          from github import Github
-          from datetime import datetime, timedelta
-          import json
-          import os
-
-          g = Github(os.getenv('GITHUB_TOKEN'))
-          repo = g.get_repo(os.getenv('GITHUB_REPOSITORY'))
-          
-          competitions = []
-          excluded = ['.github', '.git', 'static', 'data', 'images']
-          
-          for content in repo.get_contents(""):
-              if content.type == "dir" and content.name.lower() not in excluded:
-                  try:
-                      logo = repo.get_contents(f"{content.name}.png").download_url
-                  except:
-                      logo = None
-                  
-                  competitions.append({
-                      "name": content.name.replace('_', ' ').title(),
-                      "path": content.name,
-                      "logo": logo,
-                      "updated_at": content.last_modified.isoformat()
-                  })
-          
-          os.makedirs('data', exist_ok=True)
-          with open('data/competitions.json', 'w') as f:
-              json.dump(competitions, f, indent=2)
-          EOF
+          mkdir -p data
+          echo '[
+            {
+              "name": "Summer Dance Battle 2024",
+              "id": "summer2024",
+              "date": "July 15-17, 2024",
+              "description": "Annual international dance competition",
+              "registration_link": "/summer2024/register.html",
+              "logo": "summer2024.png",
+              "created_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            },
+            {
+              "name": "Winter Star Cup",
+              "id": "winter2024",
+              "date": "December 5-7, 2024",
+              "description": "Winter championship for all categories",
+              "registration_link": "/winter2024/register.html",
+              "created_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            }
+          ]' > data/registrations.json
 
       - name: Commit changes
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add data/competitions.json
-          git commit -m "Automatic data update"
+          git add data/registrations.json
+          git commit -m "Update registration data"
           git push
