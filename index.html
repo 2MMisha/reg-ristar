@@ -142,11 +142,30 @@
   const EXCLUDE_FOLDERS = ['.github', '.git', 'static', 'images'];
   const DEFAULT_LOGO = 'logo.png';
 
+  // Загрузка JSON с описаниями
+  async function loadDescriptions() {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/descriptions.json`);
+      if (!response.ok) return {};
+      
+      const data = await response.json();
+      const content = atob(data.content); // Декодируем base64
+      return JSON.parse(content);
+    } catch (error) {
+      console.error('Error loading descriptions:', error);
+      return {};
+    }
+  }
+
   // Загрузка списка папок-конкурсов
   async function getCompetitionFolders() {
     const competitionsList = document.getElementById('competitions-list');
     
     try {
+      // Загружаем описания
+      const descriptions = await loadDescriptions();
+      
+      // Загружаем список папок
       const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/`);
       if (!response.ok) throw new Error(`GitHub API error: ${response.status}`);
       
@@ -158,6 +177,7 @@
       );
       
       competitionsList.innerHTML = '';
+      
       if (folders.length === 0) {
         competitionsList.innerHTML = '<div class="no-competitions">No competitions available.</div>';
         return;
@@ -167,12 +187,15 @@
       for (const folder of folders) {
         const eventItem = document.createElement('a');
         eventItem.className = 'event-item';
-        eventItem.href = `${folder.name}/index.html`;  // Ссылка остается с оригинальным именем
+        eventItem.href = `${folder.name}/index.html`;
         
-        // Форматируем название: $ → пробел, первая буква заглавная
+        // Форматируем название
         const displayName = folder.name
           .replace(/\$/g, ' ')
           .replace(/\b\w/g, l => l.toUpperCase());
+        
+        // Получаем описание (если есть) или используем дефолтное
+        const description = descriptions[folder.name] || DEFAULT_DESCRIPTION;
         
         // Пытаемся загрузить логотип
         let logoUrl = DEFAULT_LOGO;
@@ -190,7 +213,7 @@
           <img src="${logoUrl}" alt="${displayName} Logo" onerror="this.src='${DEFAULT_LOGO}'" />
           <div class="event-info">
             <div class="event-title">${displayName}</div>
-            <div class="event-desc">${DEFAULT_DESCRIPTION}</div>
+            <div class="event-desc">${description}</div>
           </div>
         `;
         
