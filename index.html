@@ -1,184 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dance Competition Registration</title>
-  <link rel="icon" href="/static/web.ico" type="image/x-icon" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 30px 20px;
-      background: #f5f7fa;
-      color: #333;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin-bottom: 24px;
-      font-size: 2rem;
-      text-align: center;
-      color: #2c3e50;
-    }
-
-    .block {
-      background: #ffffff;
-      border-radius: 10px;
-      padding: 20px 25px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      margin-bottom: 30px;
-    }
-
-    h2 {
-      margin-top: 0;
-      margin-bottom: 16px;
-      font-size: 1.5rem;
-      color: #0077cc;
-    }
-
-    .event-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .event-item {
-      display: flex;
-      align-items: center;
-      background: #f0f8ff;
-      border-radius: 10px;
-      padding: 12px 16px;
-      transition: background-color 0.3s;
-      text-decoration: none;
-      color: inherit;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .event-item:hover {
-      background-color: #e6f3ff;
-    }
-
-    .event-item img {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      margin-right: 16px;
-      object-fit: cover;
-      background: #ddd;
-    }
-
-    .event-info {
-      flex-grow: 1;
-    }
-
-    .event-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #0077cc;
-    }
-
-    .event-desc {
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    .register-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 16px;
-      background: #28a745;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 0.9rem;
-      transition: background-color 0.3s;
-    }
-
-    .register-btn:hover {
-      background-color: #218838;
-    }
-
-    .home-link {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 15px;
-      background: #0077cc;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
-    }
-
-    .home-link:hover {
-      background-color: #005fa3;
-    }
-
-    .loading-message,
-    .error-message,
-    .no-competitions {
-      padding: 15px;
-      text-align: center;
-      color: #666;
-      font-style: italic;
-    }
-
-    .error-message {
-      color: #d9534f;
-    }
-
-    .notification {
-      background-color: #fff3cd;
-      border-left: 5px solid #ffc107;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-    }
-
-    .notification-icon {
-      margin-right: 10px;
-      font-size: 1.2rem;
-    }
-
-    .event-date {
-      font-size: 0.85rem;
-      color: #6c757d;
-      margin-top: 5px;
-    }
-
-    @media (max-width: 600px) {
-      .event-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .event-item img {
-        margin: 0 0 10px 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competition Registration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .competitions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .competition-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid #e0e0e0;
+        }
+        .competition-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+            border-color: #3498db;
+        }
+        .logo-container {
+            width: 100%;
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            background-color: #f5f7fa;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .competition-logo {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        .competition-name {
+            font-size: 1.25em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #2c3e50;
+        }
+        .competition-description {
+            color: #555;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .register-btn {
+            display: block;
+            background: #3498db;
+            color: white;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .register-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        .loading {
+            text-align: center;
+            font-size: 1.1em;
+            padding: 60px 0;
+            color: #7f8c8d;
+        }
+        .error {
+            color: #e74c3c;
+            text-align: center;
+            padding: 60px 20px;
+            background: #fdecea;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .last-updated {
+            text-align: center;
+            color: #95a5a6;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-
-<h1>📝 Rising Star Manager - Registration</h1>
-<div class="block">
-  <h2>✍️ Competition Registration</h2>
-  
-  <div class="notification" id="registration-notification">
-    <span class="notification-icon">⏳</span>
-    <div>
-      <strong>Registration Info:</strong> THE SITE IS ON RENOVATION. 0547798676 / reg.risingstar@gmail.com / 2mmedia.il@gmail.com
+    <div class="container">
+        <h1>Competition Registration Portal</h1>
+        <div id="competitions-container">
+            <div class="loading">
+                <div>Loading available competitions...</div>
+                <div style="margin-top: 20px; font-size: 0.9em; color: #bdc3c7;">Fetching data</div>
+            </div>
+        </div>
+        <div id="last-updated" class="last-updated"></div>
     </div>
-  </div>
-  
-  <div class="event-list" id="registration-list">
-    <div class="loading-message">Loading available competitions...</div>
-  </div>
-</div>
-<a href="https://www.ristar.co" class="home-link">HOME</a>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const container = document.getElementById('competitions-container');
+            const lastUpdatedEl = document.getElementById('last-updated');
+            const repo = '2MMisha/reg-ristar';
+            const defaultLogo = 'logo.png';
+            
+            // 1. Загружаем список конкурсов через GitHub Pages
+            try {
+                const response = await fetch('/reg-ristar/competitions.json?t=' + Date.now());
+                
+                if (!response.ok) throw new Error('Server response: ' + response.status);
+                
+                const competitions = await response.json();
+                
+                if (!competitions || competitions.length === 0) {
+                    throw new Error('No competitions found in data file');
+                }
 
+                // 2. Создаем карточки
+                let html = '<div class="competitions-grid">';
+                
+                for (const comp of competitions) {
+                    const compName = comp.name.replace(/\$/g, ' ');
+                    const logoUrl = `/reg-ristar/${comp.logo || defaultLogo}`;
+                    const registerUrl = `/reg-ristar/${comp.path}/`;
+                    
+                    html += `
+                        <div class="competition-card">
+                            <div class="logo-container">
+                                <img src="${logoUrl}" 
+                                     alt="${compName}" 
+                                     class="competition-logo"
+                                     onerror="this.src='/reg-ristar/${defaultLogo}'; this.style.maxHeight='70%'">
+                            </div>
+                            <h3 class="competition-name">${compName}</h3>
+                            <p class="competition-description">${comp.description || 'Registration is open'}</p>
+                            <a href="${registerUrl}" class="register-btn" target="_blank">
+                                Register Now →
+                            </a>
+                        </div>
+                    `;
+                }
+                
+                container.innerHTML = html + '</div>';
+                lastUpdatedEl.textContent = `Last updated: ${new Date().toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Error:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        <strong>Error loading competitions</strong><br><br>
+                        ${error.message}<br><br>
+                        <small>Try refreshing the page</small>
+                    </div>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>
