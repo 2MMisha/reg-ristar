@@ -33,6 +33,34 @@
       margin-bottom: 25px;
       font-size: clamp(1.5rem, 4vw, 2rem);
     }
+    .countdown-container {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      background-color: #fff4e5;
+      border: 1px solid #ffd8b5;
+    }
+    .countdown-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #d35400;
+    }
+    .countdown-timer {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #e74c3c;
+    }
+    .registration-closed {
+      text-align: center;
+      padding: 30px;
+      background-color: #f8d7da;
+      color: #721c24;
+      border-radius: 8px;
+      border: 1px solid #f5c6cb;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
     .form-group {
       margin-bottom: 18px;
     }
@@ -160,152 +188,222 @@
   <div class="registration-form">
     <h1>Competition Registration</h1>
     
-    <div class="info-note">
-      <p>If you need to submit a large number of applications, please contact us at <a href="https://www.ristar.co/contact.html" target="_blank">www.ristar.co/contact.html</a></p>
+    <div id="countdown" class="countdown-container">
+      <div class="countdown-title">Registration closes in:</div>
+      <div class="countdown-timer" id="countdown-timer">Loading...</div>
     </div>
     
-    <form action="https://formsubmit.co/reg.risingstar@gmail.com" method="POST">
-      <!-- Hidden fields for FormSubmit -->
-      <input type="hidden" name="_subject" value="New Competition Registration">
-      <input type="hidden" name="_autoresponse" value="Thank you for registering for EDC-2025! You have registered %partner-name%<% if application_type == 'couple' { %> and %partneress-name%<% } %> for %categories%. We look forward to seeing you!">
-      <input type="hidden" name="_next" value="https://registration.ristar.co/EDC-2025/success.html">
-      <input type="hidden" name="_captcha" value="false">
-      <input type="hidden" name="_honey" value="" style="display:none">
-      <input type="hidden" name="_template" value="custom">
-      <textarea name="_template_custom" style="display:none">
-        <table>
-          <tr>
-            <th>Competition Name</th>
-            <th>Application Type</th>
-            <th>Partner Name</th>
-            <th>Partner DOB</th>
-            <th>Partneress Name</th>
-            <th>Partneress DOB</th>
-            <th>Club Name</th>
-            <th>Categories</th>
-            <th>Contact Person</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>Applicant Status</th>
-          </tr>
-          <tr>
-            <td>{{competition}}</td>
-            <td>{{application_type}}</td>
-            <td>{{partner_name}}</td>
-            <td>{{partner_dob}}</td>
-            <td>{{partneress_name}}</td>
-            <td>{{partneress_dob}}</td>
-            <td>{{club}}</td>
-            <td>{{categories}}</td>
-            <td>{{contact_name}}</td>
-            <td>{{phone}}</td>
-            <td>{{email}}</td>
-            <td>{{applicant_status}}</td>
-          </tr>
-        </table>
-      </textarea>
-      
-      <div class="form-group">
-        <label for="competition" class="required">Competition Name</label>
-        <input type="text" id="competition" name="competition" value="MDA-2025" readonly>
+    <div id="registration-closed" class="registration-closed hidden">
+      Registration is closed.
+    </div>
+    
+    <div id="form-container">
+      <div class="info-note">
+        <p>If you need to submit a large number of applications, please contact us at <a href="https://www.ristar.co/contact.html" target="_blank">www.ristar.co/contact.html</a></p>
       </div>
       
-      <div class="form-group">
-        <label class="required">Application Type</label>
-        <div class="application-type">
-          <div class="application-type-option">
-            <input type="radio" id="couple" name="application_type" value="couple" checked>
-            <label for="couple">Couple</label>
-          </div>
-          <div class="application-type-option">
-            <input type="radio" id="solo" name="application_type" value="solo">
-            <label for="solo">Solo</label>
+      <form id="registration-form" action="https://formsubmit.co/reg.risingstar@gmail.com" method="POST">
+        <!-- Hidden fields for FormSubmit -->
+        <input type="hidden" name="_subject" value="New Competition Registration">
+        <input type="hidden" name="_autoresponse" value="Thank you for registering for EDC-2025! You have registered %partner-name%<% if application_type == 'couple' { %> and %partneress-name%<% } %> for %categories%. We look forward to seeing you!">
+        <input type="hidden" name="_next" value="https://registration.ristar.co/EDC-2025/success.html">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_honey" value="" style="display:none">
+        <input type="hidden" name="_template" value="custom">
+        <textarea name="_template_custom" style="display:none">
+          <table>
+            <tr>
+              <th>Competition Name</th>
+              <th>Application Type</th>
+              <th>Partner Name</th>
+              <th>Partner DOB</th>
+              <th>Partneress Name</th>
+              <th>Partneress DOB</th>
+              <th>Club Name</th>
+              <th>Categories</th>
+              <th>Contact Person</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Applicant Status</th>
+            </tr>
+            <tr>
+              <td>{{competition}}</td>
+              <td>{{application_type}}</td>
+              <td>{{partner_name}}</td>
+              <td>{{partner_dob}}</td>
+              <td>{{partneress_name}}</td>
+              <td>{{partneress_dob}}</td>
+              <td>{{club}}</td>
+              <td>{{categories}}</td>
+              <td>{{contact_name}}</td>
+              <td>{{phone}}</td>
+              <td>{{email}}</td>
+              <td>{{applicant_status}}</td>
+            </tr>
+          </table>
+        </textarea>
+        
+        <div class="form-group">
+          <label for="competition" class="required">Competition Name</label>
+          <input type="text" id="competition" name="competition" value="MDA-2025" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label class="required">Application Type</label>
+          <div class="application-type">
+            <div class="application-type-option">
+              <input type="radio" id="couple" name="application_type" value="couple" checked>
+              <label for="couple">Couple</label>
+            </div>
+            <div class="application-type-option">
+              <input type="radio" id="solo" name="application_type" value="solo">
+              <label for="solo">Solo</label>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="form-group" id="partner-group">
-        <label for="partner-name" class="required">Partner Name (English)</label>
-        <input type="text" id="partner-name" name="partner-name" required>
-      </div>
-      
-      <div class="form-group" id="partner-dob-group">
-        <label for="partner-dob" class="required">Partner Date of Birth</label>
-        <input type="date" id="partner-dob" name="partner-dob" required>
-      </div>
-      
-      <div class="form-group partneress-group">
-        <label for="partneress-name" class="required">Partneress Name (English)</label>
-        <input type="text" id="partneress-name" name="partneress-name" required>
-      </div>
-      
-      <div class="form-group partneress-group">
-        <label for="partneress-dob" class="required">Partneress Date of Birth</label>
-        <input type="date" id="partneress-dob" name="partneress-dob" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="club" class="required">Club Name</label>
-        <input type="text" id="club" name="club" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="required">Categories</label>
-        <div class="categories">
-          <div class="category-option">
-            <input type="checkbox" id="latin" name="categories[]" value="Latin">
-            <label for="latin">Latin</label>
-          </div>
-          <div class="category-option">
-            <input type="checkbox" id="standard" name="categories[]" value="Standard">
-            <label for="standard">Standard</label>
-          </div>
-          <div class="category-option">
-            <input type="checkbox" id="latin-skating" name="categories[]" value="Latin SKATING">
-            <label for="latin-skating">Latin SKATING</label>
-          </div>
-          <div class="category-option">
-            <input type="checkbox" id="standard-skating" name="categories[]" value="Standard SKATING">
-            <label for="standard-skating">Standard SKATING</label>
+        
+        <div class="form-group" id="partner-group">
+          <label for="partner-name" class="required">Partner Name (English)</label>
+          <input type="text" id="partner-name" name="partner-name" required>
+        </div>
+        
+        <div class="form-group" id="partner-dob-group">
+          <label for="partner-dob" class="required">Partner Date of Birth</label>
+          <input type="date" id="partner-dob" name="partner-dob" required>
+        </div>
+        
+        <div class="form-group partneress-group">
+          <label for="partneress-name" class="required">Partneress Name (English)</label>
+          <input type="text" id="partneress-name" name="partneress-name" required>
+        </div>
+        
+        <div class="form-group partneress-group">
+          <label for="partneress-dob" class="required">Partneress Date of Birth</label>
+          <input type="date" id="partneress-dob" name="partneress-dob" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="club" class="required">Club Name</label>
+          <input type="text" id="club" name="club" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="required">Categories</label>
+          <div class="categories">
+            <div class="category-option">
+              <input type="checkbox" id="youth-quickstep" name="categories[]" value="Youth Open - Quickstep Cup">
+              <label for="youth-quickstep">Youth Open - Quickstep Cup</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="youth-jive" name="categories[]" value="Youth Open - Jive Cup">
+              <label for="youth-jive">Youth Open - Jive Cup</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="u21-pasodoble" name="categories[]" value="U21 Open - Pasodoble Cup">
+              <label for="u21-pasodoble">U21 Open - Pasodoble Cup</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="junior2-e" name="categories[]" value="Junior II - E class">
+              <label for="junior2-e">Junior II - E class</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="juvenile1-e" name="categories[]" value="Juvenile I - E class">
+              <label for="juvenile1-e">Juvenile I - E class</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="juvenile2-e" name="categories[]" value="Juvenile II - E class">
+              <label for="juvenile2-e">Juvenile II - E class</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="adults-foxtrot" name="categories[]" value="Adults Open - Foxtrot Cup">
+              <label for="adults-foxtrot">Adults Open - Foxtrot Cup</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="junior1-f" name="categories[]" value="Junior I - F class">
+              <label for="junior1-f">Junior I - F class</label>
+            </div>
+            <div class="category-option">
+              <input type="checkbox" id="juvenile1-f" name="categories[]" value="Juvenile I - F class">
+              <label for="juvenile1-f">Juvenile I - F class</label>
+            </div>
           </div>
         </div>
-      </div>
-      
-      <div class="divider"></div>
-      
-      <div class="section-title">Contact Information</div>
-      
-      <div class="form-group">
-        <label for="contact-name" class="required">Contact Person Name</label>
-        <input type="text" id="contact-name" name="contact-name" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="phone" class="required">Phone Number (with country code)</label>
-        <input type="tel" id="phone" name="phone" required placeholder="+1234567890">
-      </div>
-      
-      <div class="form-group">
-        <label for="email" class="required">Email</label>
-        <input type="email" id="email" name="email" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="applicant-status" class="required">Applicant Status</label>
-        <select id="applicant-status" name="applicant-status" required>
-          <option value="">Select status</option>
-          <option value="teacher">Teacher/Coach</option>
-          <option value="parent">Parent</option>
-          <option value="participant">Participant</option>
-          <option value="other">Other</option>
-        </select>
-      </div>
-      
-      <button type="submit">Submit Registration</button>
-    </form>
+        
+        <div class="divider"></div>
+        
+        <div class="section-title">Contact Information</div>
+        
+        <div class="form-group">
+          <label for="contact-name" class="required">Contact Person Name</label>
+          <input type="text" id="contact-name" name="contact-name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone" class="required">Phone Number (with country code)</label>
+          <input type="tel" id="phone" name="phone" required placeholder="+1234567890">
+        </div>
+        
+        <div class="form-group">
+          <label for="email" class="required">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="applicant-status" class="required">Applicant Status</label>
+          <select id="applicant-status" name="applicant-status" required>
+            <option value="">Select status</option>
+            <option value="teacher">Teacher/Coach</option>
+            <option value="parent">Parent</option>
+            <option value="participant">Participant</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <button type="submit">Submit Registration</button>
+      </form>
+    </div>
   </div>
 
   <script>
+    // Установите дату и время закрытия регистрации здесь
+    // Формат: Год, Месяц (0-11), День, Часы, Минуты
+    const registrationEndTime = new Date(2025, 7, 30, 17, 30); // 30 августа 2025, 17:30
+    
+    // Функция для обновления таймера
+    function updateCountdown() {
+      const now = new Date();
+      const timeRemaining = registrationEndTime - now;
+      
+      // Если время истекло
+      if (timeRemaining <= 0) {
+        document.getElementById('countdown-timer').textContent = '00:00:00';
+        document.getElementById('registration-closed').classList.remove('hidden');
+        document.getElementById('form-container').classList.add('hidden');
+        document.getElementById('countdown').classList.add('hidden');
+        return;
+      }
+      
+      // Вычисляем оставшееся время
+      const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+      
+      // Форматируем вывод
+      let countdownText = '';
+      if (days > 0) {
+        countdownText += `${days}d `;
+      }
+      countdownText += `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      
+      // Обновляем таймер на странице
+      document.getElementById('countdown-timer').textContent = countdownText;
+    }
+    
+    // Запускаем таймер сразу и обновляем каждую секунду
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    
     // Toggle partner/partneress fields based on application type
     document.querySelectorAll('input[name="application_type"]').forEach(radio => {
       radio.addEventListener('change', function() {
@@ -322,6 +420,13 @@
 
     // Form validation
     document.querySelector('form').addEventListener('submit', function(e) {
+      // Проверяем, не истекло ли время регистрации
+      if (new Date() >= registrationEndTime) {
+        e.preventDefault();
+        alert('Registration is closed. The form cannot be submitted.');
+        return;
+      }
+      
       const checkboxes = document.querySelectorAll('input[name="categories[]"]:checked');
       if (checkboxes.length === 0) {
         alert('Please select at least one category');
