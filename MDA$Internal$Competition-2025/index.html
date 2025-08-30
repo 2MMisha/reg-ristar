@@ -104,18 +104,6 @@
       min-width: 18px;
       min-height: 18px;
     }
-    .category-age {
-      font-size: 0.85em;
-      color: #666;
-      margin-left: 5px;
-      font-style: italic;
-    }
-    .age-error {
-      color: #e74c3c;
-      font-size: 0.9em;
-      margin-top: 5px;
-      display: none;
-    }
     button {
       background-color: #0077cc;
       color: white;
@@ -303,43 +291,42 @@
           <label class="required">Categories</label>
           <div class="categories">
             <div class="category-option">
-              <input type="checkbox" id="youth-quickstep" name="categories[]" value="Youth Open - Quickstep Cup" data-min-age="16" data-max-age="18">
-              <label for="youth-quickstep">Youth Open - Quickstep Cup <span class="category-age">(16-18 лет)</span></label>
+              <input type="checkbox" id="youth-quickstep" name="categories[]" value="Youth Open - Quickstep Cup">
+              <label for="youth-quickstep">Youth Open - Quickstep Cup</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="youth-jive" name="categories[]" value="Youth Open - Jive Cup" data-min-age="16" data-max-age="18">
-              <label for="youth-jive">Youth Open - Jive Cup <span class="category-age">(16-18 лет)</span></label>
+              <input type="checkbox" id="youth-jive" name="categories[]" value="Youth Open - Jive Cup">
+              <label for="youth-jive">Youth Open - Jive Cup</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="u21-pasodoble" name="categories[]" value="U21 Open - Pasodoble Cup" data-max-age="21">
-              <label for="u21-pasodoble">U21 Open - Pasodoble Cup <span class="category-age">(до 21 года)</span></label>
+              <input type="checkbox" id="u21-pasodoble" name="categories[]" value="U21 Open - Pasodoble Cup">
+              <label for="u21-pasodoble">U21 Open - Pasodoble Cup</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="junior2-e" name="categories[]" value="Junior II - E class" data-min-age="14" data-max-age="15">
-              <label for="junior2-e">Junior II - E class <span class="category-age">(14-15 лет)</span></label>
+              <input type="checkbox" id="junior2-e" name="categories[]" value="Junior II - E class">
+              <label for="junior2-e">Junior II - E class</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="juvenile1-e" name="categories[]" value="Juvenile I - E class" data-min-age="9" data-max-age="10">
-              <label for="juvenile1-e">Juvenile I - E class <span class="category-age">(9-10 лет)</span></label>
+              <input type="checkbox" id="juvenile1-e" name="categories[]" value="Juvenile I - E class">
+              <label for="juvenile1-e">Juvenile I - E class</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="juvenile2-e" name="categories[]" value="Juvenile II - E class" data-min-age="11" data-max-age="12">
-              <label for="juvenile2-e">Juvenile II - E class <span class="category-age">(11-12 лет)</span></label>
+              <input type="checkbox" id="juvenile2-e" name="categories[]" value="Juvenile II - E class">
+              <label for="juvenile2-e">Juvenile II - E class</label>
             </div>
             <div class="category-option">
               <input type="checkbox" id="adults-foxtrot" name="categories[]" value="Adults Open - Foxtrot Cup">
               <label for="adults-foxtrot">Adults Open - Foxtrot Cup</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="junior1-f" name="categories[]" value="Junior I - F class" data-min-age="13" data-max-age="14">
-              <label for="junior1-f">Junior I - F class <span class="category-age">(13-14 лет)</span></label>
+              <input type="checkbox" id="junior1-f" name="categories[]" value="Junior I - F class">
+              <label for="junior1-f">Junior I - F class</label>
             </div>
             <div class="category-option">
-              <input type="checkbox" id="juvenile1-f" name="categories[]" value="Juvenile I - F class" data-min-age="9" data-max-age="10">
-              <label for="juvenile1-f">Juvenile I - F class <span class="category-age">(9-10 лет)</span></label>
+              <input type="checkbox" id="juvenile1-f" name="categories[]" value="Juvenile I - F class">
+              <label for="juvenile1-f">Juvenile I - F class</label>
             </div>
           </div>
-          <div id="age-error" class="age-error"></div>
         </div>
         
         <div class="divider"></div>
@@ -431,85 +418,6 @@
       });
     });
 
-    // Функция для расчета возраста на январь текущего года
-    function calculateAgeAsOfJanuary(birthDate) {
-      const today = new Date();
-      const currentYear = today.getFullYear();
-      const januaryFirst = new Date(currentYear, 0, 1); // 1 января текущего года
-      
-      // Если день рождения еще не наступил в этом году
-      let age = januaryFirst.getFullYear() - birthDate.getFullYear();
-      const monthDiff = januaryFirst.getMonth() - birthDate.getMonth();
-      
-      if (monthDiff < 0 || (monthDiff === 0 && januaryFirst.getDate() < birthDate.getDate())) {
-        age--;
-      }
-      
-      return age;
-    }
-
-    // Функция проверки возраста для категории
-    function checkAgeForCategory(category, birthDate) {
-      const minAge = parseInt(category.dataset.minAge) || 0;
-      const maxAge = parseInt(category.dataset.maxAge) || 999; // Большое число, если нет ограничения
-      
-      const age = calculateAgeAsOfJanuary(birthDate);
-      
-      return age >= minAge && age <= maxAge;
-    }
-
-    // Функция проверки всех выбранных категорий
-    function validateCategories() {
-      const partnerDob = new Date(document.getElementById('partner-dob').value);
-      const partneressDob = document.getElementById('couple').checked ? 
-                            new Date(document.getElementById('partneress-dob').value) : null;
-      
-      const selectedCategories = document.querySelectorAll('input[name="categories[]"]:checked');
-      const ageError = document.getElementById('age-error');
-      let isValid = true;
-      let errorMessage = '';
-      
-      // Проверяем каждую выбранную категорию
-      selectedCategories.forEach(category => {
-        // Проверяем партнера
-        if (!checkAgeForCategory(category, partnerDob)) {
-          const minAge = category.dataset.minAge || 0;
-          const maxAge = category.dataset.maxAge || 'нет ограничения';
-          isValid = false;
-          errorMessage = `Партнер не соответствует возрастным требованиям для категории "${category.value}". `;
-        }
-        
-        // Если это пара, проверяем партнершу
-        if (document.getElementById('couple').checked && partneressDob) {
-          if (!checkAgeForCategory(category, partneressDob)) {
-            const minAge = category.dataset.minAge || 0;
-            const maxAge = category.dataset.maxAge || 'нет ограничения';
-            isValid = false;
-            errorMessage += `Партнерша не соответствует возрастным требованиям для категории "${category.value}".`;
-          }
-        }
-      });
-      
-      // Показываем или скрываем сообщение об ошибке
-      if (!isValid) {
-        ageError.textContent = errorMessage;
-        ageError.style.display = 'block';
-      } else {
-        ageError.style.display = 'none';
-      }
-      
-      return isValid;
-    }
-
-    // Обработчики событий для проверки возраста при изменении дат рождения
-    document.getElementById('partner-dob').addEventListener('change', validateCategories);
-    document.getElementById('partneress-dob').addEventListener('change', validateCategories);
-    
-    // Обработчики событий для проверки возраста при выборе категорий
-    document.querySelectorAll('input[name="categories[]"]').forEach(checkbox => {
-      checkbox.addEventListener('change', validateCategories);
-    });
-
     // Form validation
     document.querySelector('form').addEventListener('submit', function(e) {
       // Проверяем, не истекло ли время регистрации
@@ -523,13 +431,6 @@
       if (checkboxes.length === 0) {
         alert('Please select at least one category');
         e.preventDefault();
-        return;
-      }
-      
-      // Проверяем возрастные ограничения
-      if (!validateCategories()) {
-        e.preventDefault();
-        return;
       }
       
       // Date of birth validation
@@ -539,7 +440,6 @@
       if (partnerDob > today) {
         alert('Partner date of birth cannot be in the future');
         e.preventDefault();
-        return;
       }
       
       // Only validate partneress if it's a couple application
@@ -548,7 +448,6 @@
         if (partneressDob > today) {
           alert('Partneress date of birth cannot be in the future');
           e.preventDefault();
-          return;
         }
       }
     });
