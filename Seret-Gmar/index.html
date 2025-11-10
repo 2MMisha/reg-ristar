@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>טופס אודישן – מגמת קולנוע רביבים</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Alef", Arial, sans-serif;
+        background: #0a0f2a;
+        color: white;
+    }
+
+    .container {
+        max-width: 520px;
+        margin: 40px auto;
+        background: #111520;
+        padding: 32px;
+        border-radius: 14px;
+        box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to   {opacity: 1; transform: translateY(0);}
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: 600;
+        color: #dce6ff;
+    }
+
+    .step { display: none; animation: fadeIn 0.6s ease; }
+    .step.active { display: block; }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        font-size: 15px;
+        color: #d0d7ff;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 6px;
+        border-radius: 8px;
+        border: none;
+        background: #1a1f33;
+        color: white;
+        font-size: 15px;
+    }
+
+    textarea { height: 120px; resize: none; }
+
+    .buttons {
+        margin-top: 28px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .btn {
+        background: #2f3b78;
+        padding: 12px 20px;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #4254a3;
+        transform: scale(1.05);
+    }
+
+    .logo {
+        width: 120px;
+        display: block;
+        margin: 0 auto 20px auto;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 22px;
+        font-size: 12px;
+        opacity: 0.8;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <img src="logo.png" class="logo">
+
+    <h2>סרט גמר - מגמת קולנוע רביבים>/h2>
+
+    <form action="https://formsubmit.co/yb.michael26@gmail.com" method="POST">
+
+        <!-- FormSubmit settings -->
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="thanks.html">
+
+        <!-- חלק 1 -->
+        <div class="step active" id="step1">
+
+            <label>שם פרטי</label>
+            <input type="text" name="first_name" required>
+
+            <label>שם משפחה</label>
+            <input type="text" name="last_name" required>
+
+            <label>תאריך לידה</label>
+            <input type="date" name="birthdate" required>
+
+            <label>מגדר</label>
+            <select name="gender" required>
+                <option value="">בחר/י...</option>
+                <option value="זכר">זכר</option>
+                <option value="נקבה">נקבה</option>
+                <option value="אחר">אחר</option>
+            </select>
+
+            <label>מספר טלפון</label>
+            <input type="tel" name="phone" required>
+
+            <label>דוא״ל</label>
+            <input type="email" name="email" required>
+
+            <div class="buttons">
+                <div></div>
+                <button type="button" class="btn" onclick="nextStep()">המשך</button>
+            </div>
+        </div>
+
+        <!-- חלק 2 -->
+        <div class="step" id="step2">
+
+            <label>ספר/י לנו על עצמך בקצרה</label>
+            <textarea name="about" placeholder="רקע אישי, תחומי עניין, יכולות מיוחדות" required></textarea>
+
+            <label>ניסיון במשחק על במה</label>
+            <textarea name="stage_exp" placeholder="הצגות, תיאטרון, קורסים, הופעות בית־ספר"></textarea>
+
+            <label>ניסיון בצילומים</label>
+            <textarea name="film_exp" placeholder="פרויקטים, סרטונים, רשתות, סרטי תלמידים"></textarea>
+
+            <label>האם יש לך זמינות מלאה לימי צילום? (שבוע, משוער תחילת חודש פברואר)</label>
+            <label>האם את/ה פנוי/ה לכל ימי הצילום?</label>
+
+<label><input type="radio" name="availability" value="כן"> כן</label>
+<label><input type="radio" name="availability" value="לא"> לא</label>
+<label><input type="radio" name="availability" value="חלקית"> חלקית</label>
+
+            <div class="buttons">
+                <button type="button" class="btn" onclick="prevStep()">חזרה</button>
+                <button type="button" class="btn" onclick="nextStep()">המשך</button>
+            </div>
+        </div>
+
+        <!-- חלק 3 -->
+        <div class="step" id="step3">
+            <label>הערות נוספות</label>
+            <textarea name="comments" placeholder="כל דבר שחשוב לנו לדעת"></textarea>
+
+            <div class="buttons">
+                <button type="button" class="btn" onclick="prevStep()">חזרה</button>
+                <button type="submit" class="btn">שליחה</button>
+            </div>
+        </div>
+
+    </form>
+
+    <div class="footer">
+        מערכת הטפסים של Rising Star Manager (ristar.co)
+    </div>
+
+</div>
+
+<script>
+let current = 1;
+function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById("step" + n).classList.add("active");
+}
+function nextStep() {
+    if (current < 3) { current++; showStep(current); }
+}
+function prevStep() {
+    if (current > 1) { current--; showStep(current); }
+}
+</script>
+
+</body>
+</html>
