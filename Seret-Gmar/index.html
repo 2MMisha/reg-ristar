@@ -14,16 +14,17 @@
     }
 
     .container {
-        max-width: 520px;
-        width: 90%;
-        margin: 40px auto;
-        background: #f8faff; /* Очень светлый голубовато-белый */
-        padding: 32px;
-        border-radius: 16px;
-        border: 1px solid #dce3f5;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-        animation: fadeIn 0.8s ease;
-    }
+    max-width: 520px;
+    width: 100%;
+    margin: 40px auto;
+    background: #f8faff;
+    padding: 32px;
+    border-radius: 16px;
+    border: 1px solid #dce3f5;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    animation: fadeIn 0.8s ease;
+    box-sizing: border-box;
+}
 
     @keyframes fadeIn {
         from {opacity: 0; transform: translateY(20px);}
