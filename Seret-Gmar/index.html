@@ -258,6 +258,42 @@ function prevStep() {
     if (current > 1) { current--; showStep(current); }
 }
 </script>
+<script>
+let current = 1;
 
+function validateStep(stepNumber) {
+    const step = document.getElementById("step" + stepNumber);
+    const fields = step.querySelectorAll("input[required], textarea[required], select[required]");
+    
+    for (const field of fields) {
+        if (!field.value || (field.type === "radio" && !step.querySelector(`input[name="${field.name}"]:checked`))) {
+            field.scrollIntoView({ behavior: "smooth", block: "center" });
+            field.style.borderColor = "red";
+            setTimeout(() => field.style.borderColor = "", 1500);
+            return false;
+        }
+    }
+    return true;
+}
+
+function showStep(n) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById("step" + n).classList.add("active");
+}
+
+function nextStep() {
+    if (validateStep(current)) {
+        current++;
+        showStep(current);
+    }
+}
+
+function prevStep() {
+    if (current > 1) {
+        current--;
+        showStep(current);
+    }
+}
+</script>
 </body>
 </html>
