@@ -13,6 +13,33 @@
         color: #111111; /* Черный текст */
     }
     
+    .radio-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.radio-group label {
+    background: #e8edff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #d0daf8;
+    transition: 0.2s;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.radio-group label:hover {
+    background: #d8e3ff;
+}
+
+.radio-group input {
+    transform: scale(1.2);
+}
+    
     body {
     padding: 0 16px;
 }
@@ -187,9 +214,11 @@
 
             <label>האם את/ה פנוי/ה לכל ימי הצילום? (שבוע, תחילת חודש פברואר)</label>
 
-            <label><input type="radio" name="availability" value="כן" required> כן</label>
-            <label><input type="radio" name="availability" value="לא"> לא</label>
-            <label><input type="radio" name="availability" value="חלקית"> חלקית</label>
+            <div class="radio-group">
+    <label><input type="radio" name="availability" value="כן"> כן</label>
+    <label><input type="radio" name="availability" value="לא"> לא</label>
+    <label><input type="radio" name="availability" value="חלקית"> חלקית</label>
+</div>
 
             <div class="buttons">
                 <button type="button" class="btn" onclick="prevStep()">חזרה</button>
