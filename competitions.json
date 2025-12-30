@@ -16,5 +16,11 @@
     "logo": "edc-test.png",
     "description": "",
     "regUrl": "edc-test/"
+  },
+  {
+    "name": "לילה$לבן-רביבים",
+    "logo": "לילה$לבן-רביבים.png",
+    "description": "",
+    "regUrl": "לילה$לבן-רביבים/"
   }
 ]
