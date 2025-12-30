@@ -286,6 +286,15 @@
             box-shadow: 0 0 0 2px rgba(157, 80, 232, 0.2);
         }
         
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%239d50e8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 15px center;
+            background-size: 12px;
+            padding-left: 40px;
+        }
+        
         .radio-group {
             display: flex;
             gap: 20px;
@@ -377,43 +386,6 @@
         
         .hidden {
             display: none;
-        }
-        
-        .song-list {
-            list-style: none;
-            margin-top: 10px;
-            max-height: 250px;
-            overflow-y: auto;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 10px;
-        }
-        
-        .song-list li {
-            padding: 10px 12px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: right;
-            border-right: 3px solid transparent;
-        }
-        
-        .song-list li:hover {
-            background-color: rgba(157, 80, 232, 0.2);
-        }
-        
-        .song-list li.selected {
-            background-color: rgba(157, 80, 232, 0.4);
-            border-right-color: var(--primary-color);
-        }
-        
-        .song-number {
-            display: inline-block;
-            width: 25px;
-            text-align: left;
-            color: #aaa;
-            margin-left: 10px;
         }
         
         .playback-options {
@@ -554,10 +526,6 @@
                     <div class="countdown-value" id="minutes">00</div>
                     <div class="countdown-label">דקות</div>
                 </div>
-                <div class="countdown-item">
-            
-                    
-                </div>
             </div>
         </div>
         
@@ -598,12 +566,13 @@
                 </div>
             </div>
             
-            <form id="competition-form" action="https://submitforms.com/api/form/submit" method="POST">
-                <!-- Hidden fields for SubmitForms -->
-                <input type="hidden" name="form_id" value="competition_form_he">
-                <input type="hidden" name="redirect_url" value="success.html">
-                <input type="hidden" name="email_to" value="reg.risingstar@gmail.com">
-                <input type="hidden" name="subject" value="הרשמה חדשה לתחרות הלילה של מיקרופון פתוח">
+            <form id="competition-form" action="https://formsubmit.co/reg.risingstar@gmail.com" method="POST">
+                <!-- Hidden fields for FormSubmit -->
+                <input type="hidden" name="_subject" value="הרשמה חדשה לתחרות הלילה של מיקרופון פתוח">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_next" value="success.html">
+                <input type="hidden" name="_autoresponse" value="תודה על הרשמתך לתחרות 'הלילה של מיקרופון פתוח'! קיבלנו את פרטיך ונחזור אליך בהקדם.">
                 
                 <!-- Stage 0: Applicant Data -->
                 <div class="form-section active" id="section-0">
@@ -712,25 +681,11 @@
                     <h2 class="section-title">בחירת שיר</h2>
                     
                     <div class="form-group">
-                        <label>בחרו שיר מהרשימה:</label>
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="song_selection" value="from_list" checked>
-                                מהרשימה
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="song_selection" value="not_in_list">
-                                אינו ברשימה
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group song-list-section">
-                        <label>בחרו שיר מהרשימה *</label>
-                        <ul class="song-list" id="song-list">
-                            <!-- Song list will be added by JavaScript -->
-                        </ul>
-                        <input type="hidden" id="selected-song" name="selected_song">
+                        <label for="song-select">בחרו שיר *</label>
+                        <select id="song-select" name="selected_song" class="form-control" required>
+                            <option value="">-- בחרו שיר --</option>
+                            <!-- Song options will be added by JavaScript -->
+                        </select>
                     </div>
                     
                     <div class="form-group custom-song-section hidden">
@@ -739,7 +694,7 @@
                     </div>
                     
                     <!-- Playback options -->
-                    <div class="form-group playback-section hidden" id="playback-options">
+                    <div class="form-group playback-section" id="playback-options">
                         <label>סוג הפלייבייק:</label>
                         <div class="radio-group">
                             <label class="radio-option">
@@ -752,7 +707,7 @@
                             </label>
                         </div>
                         
-                        <div class="playback-options hidden" id="version-options">
+                        <div class="playback-options" id="version-options">
                             <p>בחרו גרסה מטבלת התחרות:</p>
                             <div class="playback-option-group">
                                 <label class="radio-option">
@@ -789,7 +744,7 @@
                         <p>נא לבדוק את הנתונים שהוזנו:</p>
                         
                         <div id="review-data" style="background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; margin-top: 15px;">
-                            <!-- Review data will be inserted by JavaScript -->
+                            <!-- Review data will be inserted automatically -->
                         </div>
                     </div>
                     
@@ -839,11 +794,8 @@
             const participationTypeRadios = document.querySelectorAll('input[name="participation_type"]');
             const soloSection = document.querySelector('.solo-section');
             const groupSection = document.querySelector('.group-section');
-            const songSelectionRadios = document.querySelectorAll('input[name="song_selection"]');
-            const songListSection = document.querySelector('.song-list-section');
+            const songSelect = document.getElementById('song-select');
             const customSongSection = document.querySelector('.custom-song-section');
-            const songList = document.getElementById('song-list');
-            const selectedSongInput = document.getElementById('selected-song');
             const customSongInput = document.getElementById('custom-song');
             const playbackSection = document.getElementById('playback-options');
             const versionOptions = document.getElementById('version-options');
@@ -852,15 +804,16 @@
             const successMessage = document.getElementById('success-message');
             const newApplicationBtn = document.getElementById('new-application-btn');
             const formClosedOverlay = document.getElementById('form-closed-overlay');
+            const reviewData = document.getElementById('review-data');
             
             // Countdown elements
             const daysElement = document.getElementById('days');
             const hoursElement = document.getElementById('hours');
             const minutesElement = document.getElementById('minutes');
             
-            
             // Song list from the provided data
             const songs = [
+                {number: 99, title: "לא ברשימה", artist: ""},
                 {number: 1, title: "א-בא-ני-בי", artist: "יזהר כהן"},
                 {number: 2, title: "אבא", artist: "שלמה שבת"},
                 {number: 3, title: "אם אלה החיים", artist: "קרן פלס"},
@@ -901,109 +854,136 @@
                 {number: 38, title: "Valerie", artist: "Bruno Mars/Amy Whinehouse"}
             ];
             
-            // Populate song list
+            // Populate song dropdown
             songs.forEach(song => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <span class="song-number">${song.number}</span>
-                    ${song.title} - ${song.artist}
-                `;
-                li.dataset.value = `${song.title} - ${song.artist}`;
-                li.dataset.number = song.number;
-                li.addEventListener('click', function() {
-                    // Remove selection from all songs
-                    document.querySelectorAll('#song-list li').forEach(item => {
-                        item.classList.remove('selected');
-                    });
-                    // Select clicked song
-                    this.classList.add('selected');
-                    selectedSongInput.value = this.dataset.value;
-                    
-                    // Show/hide playback options based on song selection
-                    if (song.number === 99) {
-                        // "Not in list" - hide playback options
-                        playbackSection.classList.add('hidden');
-                    } else {
-                        // Song from list - show playback options
-                        playbackSection.classList.remove('hidden');
-                    }
-                });
-                songList.appendChild(li);
+                const option = document.createElement('option');
+                if (song.number === 99) {
+                    option.value = "not_in_list";
+                    option.textContent = "99 - לא ברשימה";
+                } else {
+                    option.value = `${song.title} - ${song.artist}`;
+                    option.textContent = `${song.number} - ${song.title} - ${song.artist}`;
+                }
+                songSelect.appendChild(option);
             });
+            
+            // Form state object
+            const formState = {
+                currentStage: 0,
+                data: {},
+                isFormOpen: true,
+                updateData: function(key, value) {
+                    this.data[key] = value;
+                    if (this.currentStage === 4) {
+                        this.updateReview();
+                    }
+                },
+                updateReview: function() {
+                    let reviewHTML = '';
+                    
+                    // Applicant info
+                    if (this.data.applicant_name) {
+                        reviewHTML += `<p><strong>מגיש/ה:</strong> ${this.data.applicant_name}</p>`;
+                    }
+                    if (this.data.applicant_class) {
+                        reviewHTML += `<p><strong>כיתה:</strong> ${this.data.applicant_class}</p>`;
+                    }
+                    if (this.data.applicant_phone) {
+                        reviewHTML += `<p><strong>טלפון:</strong> ${this.data.applicant_phone}</p>`;
+                    }
+                    
+                    // Participation type
+                    if (this.data.participation_type) {
+                        reviewHTML += `<p><strong>סוג השתתפות:</strong> ${this.data.participation_type === 'solo' ? 'סולו' : 'הרכב'}</p>`;
+                    }
+                    
+                    // Solo or group info
+                    if (this.data.participation_type === 'solo' && this.data.solo_name) {
+                        reviewHTML += `<p><strong>שם הסולן/ית:</strong> ${this.data.solo_name}</p>`;
+                    } else if (this.data.participation_type === 'group') {
+                        if (this.data.group_name) {
+                            reviewHTML += `<p><strong>שם ההרכב:</strong> ${this.data.group_name}</p>`;
+                        }
+                        // Add participants if any
+                        const participants = [];
+                        for (let i = 1; i <= 5; i++) {
+                            if (this.data[`participant${i}`]) {
+                                participants.push(this.data[`participant${i}`]);
+                            }
+                        }
+                        if (participants.length > 0) {
+                            reviewHTML += `<p><strong>משתתפים:</strong><br>`;
+                            participants.forEach(participant => {
+                                reviewHTML += `&nbsp;&nbsp;• ${participant}<br>`;
+                            });
+                            reviewHTML += `</p>`;
+                        }
+                    }
+                    
+                    // Song info
+                    if (this.data.selected_song === 'not_in_list' && this.data.custom_song) {
+                        reviewHTML += `<p><strong>שיר:</strong> ${this.data.custom_song}</p>`;
+                    } else if (this.data.selected_song && this.data.selected_song !== 'not_in_list') {
+                        reviewHTML += `<p><strong>שיר:</strong> ${this.data.selected_song}</p>`;
+                    }
+                    
+                    reviewData.innerHTML = reviewHTML;
+                }
+            };
             
             // Set deadline: January 18
             const deadline = new Date('January 18, 2026 23:59:59').getTime();
-            let formClosed = false;
+            
+            // Check if form should be open (only once on load)
+            function checkFormStatus() {
+                const now = new Date().getTime();
+                const timeLeft = deadline - now;
+                
+                if (timeLeft <= 0) {
+                    // Deadline has passed
+                    formState.isFormOpen = false;
+                    formClosedOverlay.classList.remove('hidden');
+                    
+                    // Disable form submission
+                    submitBtn.disabled = true;
+                    submitBtn.style.opacity = '0.5';
+                    submitBtn.style.cursor = 'not-allowed';
+                    
+                    // Disable all form inputs
+                    const formInputs = form.querySelectorAll('input, button, select, textarea');
+                    formInputs.forEach(input => {
+                        input.disabled = true;
+                    });
+                }
+            }
             
             // Update countdown timer
             function updateCountdown() {
-    const now = new Date().getTime();
-    const timeLeft = deadline - now;
-    
-    if (timeLeft <= 0) {
-        // Deadline has passed
-        daysElement.textContent = '00';
-        hoursElement.textContent = '00';
-        minutesElement.textContent = '00';
-        
-        
-        // Show form closed overlay
-        if (!formClosed) {
-            formClosedOverlay.classList.remove('hidden');
-            formClosed = true;
+                const now = new Date().getTime();
+                const timeLeft = deadline - now;
+                
+                if (timeLeft <= 0) {
+                    daysElement.textContent = '00';
+                    hoursElement.textContent = '00';
+                    minutesElement.textContent = '00';
+                    return;
+                }
+                
+                // Calculate days, hours, minutes
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                
+                // Update display
+                daysElement.textContent = days < 10 ? '0' + days : days;
+                hoursElement.textContent = hours < 10 ? '0' + hours : hours;
+                minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
+            }
             
-            // Disable form submission
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.5';
-            submitBtn.style.cursor = 'not-allowed';
-            
-            // Disable all form inputs
-            const formInputs = form.querySelectorAll('input, button, select, textarea');
-            formInputs.forEach(input => {
-                input.disabled = true;
-            });
-        }
-        
-        return;
-    }
-    
-    // Calculate days, hours, minutes, seconds
-    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    
-    
-    // Update display
-    daysElement.textContent = days < 10 ? '0' + days : days;
-    hoursElement.textContent = hours < 10 ? '0' + hours : hours;
-    minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
-    
-    
-    // Ensure form is open (if it was previously closed)
-    if (formClosed) {
-        formClosedOverlay.classList.add('hidden');
-        formClosed = false;
-        
-        // Enable form submission
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = '1';
-        submitBtn.style.cursor = 'pointer';
-        
-        // Enable all form inputs
-        const formInputs = form.querySelectorAll('input, button, select, textarea');
-        formInputs.forEach(input => {
-            input.disabled = false;
-        });
-    }
-}
-            // Initial countdown update
+            // Initial countdown and status check
+            checkFormStatus();
             updateCountdown();
-            
-            // Update countdown every second
-        
-            
-            // Current stage
-            let currentStage = 0;
+            setInterval(updateCountdown, 60000); // Update every minute
             
             // Function to go to a specific stage
             function goToStage(stage) {
@@ -1026,11 +1006,11 @@
                     }
                 });
                 
-                currentStage = stage;
+                formState.currentStage = stage;
                 
                 // Update review data on stage 4
                 if (stage === 4) {
-                    updateReviewData();
+                    formState.updateReview();
                 }
             }
             
@@ -1057,53 +1037,78 @@
             // Toggle between solo and group
             participationTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
+                    formState.updateData('participation_type', this.value);
+                    
                     if (this.value === 'solo') {
                         soloSection.style.display = 'block';
                         groupSection.classList.add('hidden');
                         document.getElementById('solo-name').required = true;
                         document.getElementById('group-name').required = false;
+                        
+                        // Clear group fields
+                        document.getElementById('group-name').value = '';
+                        for (let i = 1; i <= 5; i++) {
+                            document.getElementById(`participant${i}`).value = '';
+                        }
                     } else {
                         soloSection.style.display = 'none';
                         groupSection.classList.remove('hidden');
                         document.getElementById('solo-name').required = false;
                         document.getElementById('group-name').required = true;
+                        
+                        // Clear solo field
+                        document.getElementById('solo-name').value = '';
                     }
                 });
             });
             
-            // Toggle between song from list and custom song
-            songSelectionRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'from_list') {
-                        songListSection.style.display = 'block';
-                        customSongSection.classList.add('hidden');
-                        playbackSection.classList.remove('hidden');
-                        selectedSongInput.required = true;
-                        customSongInput.required = false;
-                    } else {
-                        songListSection.style.display = 'none';
-                        customSongSection.classList.remove('hidden');
-                        playbackSection.classList.add('hidden');
-                        selectedSongInput.required = false;
-                        customSongInput.required = true;
-                    }
+            // Handle song selection change
+            songSelect.addEventListener('change', function() {
+                formState.updateData('selected_song', this.value);
+                
+                if (this.value === 'not_in_list') {
+                    customSongSection.classList.remove('hidden');
+                    customSongInput.required = true;
+                    playbackSection.classList.add('hidden');
+                    songSelect.required = false;
+                } else {
+                    customSongSection.classList.add('hidden');
+                    customSongInput.required = false;
+                    playbackSection.classList.remove('hidden');
+                    songSelect.required = true;
+                    
+                    // Clear custom song field
+                    customSongInput.value = '';
+                }
+            });
+            
+            // Track input changes for form state
+            document.querySelectorAll('#competition-form input, #competition-form select').forEach(input => {
+                input.addEventListener('change', function() {
+                    formState.updateData(this.name, this.value);
+                });
+                
+                input.addEventListener('input', function() {
+                    formState.updateData(this.name, this.value);
                 });
             });
             
             // Toggle playback type (from table or own)
             playbackTypeRadios.forEach(radio => {
                 radio.addEventListener('change', function() {
+                    formState.updateData('playback_type', this.value);
+                    
                     if (this.value === 'from_table') {
-                        versionOptions.classList.remove('hidden');
+                        versionOptions.style.display = 'block';
                     } else {
-                        versionOptions.classList.add('hidden');
+                        versionOptions.style.display = 'none';
                     }
                 });
             });
             
             // Validate current stage
             function validateCurrentStage() {
-                const currentSection = document.getElementById(`section-${currentStage}`);
+                const currentSection = document.getElementById(`section-${formState.currentStage}`);
                 const requiredInputs = currentSection.querySelectorAll('[required]');
                 
                 for (let input of requiredInputs) {
@@ -1114,181 +1119,34 @@
                     }
                 }
                 
-                // Additional validation for song stage
-                if (currentStage === 3) {
-                    const songFromList = document.querySelector('input[name="song_selection"]:checked').value === 'from_list';
-                    
-                    if (songFromList && !selectedSongInput.value) {
-                        alert('נא לבחור שיר מהרשימה.');
-                        return false;
-                    }
-                    
-                    if (!songFromList && !customSongInput.value.trim()) {
-                        alert('נא לציין את שם השיר.');
-                        customSongInput.focus();
-                        return false;
-                    }
-                    
-                    // Check if playback type is selected for songs from list
-                    if (songFromList) {
-                        const playbackType = document.querySelector('input[name="playback_type"]:checked');
-                        if (!playbackType) {
-                            alert('נא לבחור סוג פלייבייק.');
-                            return false;
-                        }
-                        
-                        // If from table, check version selection
-                        if (playbackType.value === 'from_table') {
-                            const versionSelected = document.querySelector('input[name="song_version"]:checked');
-                            if (!versionSelected) {
-                                alert('נא לבחור גרסה מהטבלה.');
-                                return false;
-                            }
-                        }
-                    }
-                }
-                
                 return true;
-            }
-            
-            // Update review data on stage 4
-            function updateReviewData() {
-                const reviewContainer = document.getElementById('review-data');
-                
-                // Collect form data
-                const applicantName = document.getElementById('applicant-name').value;
-                const applicantClass = document.getElementById('applicant-class').value;
-                const applicantPhone = document.getElementById('applicant-phone').value;
-                const participationType = document.querySelector('input[name="participation_type"]:checked').value;
-                const soloName = document.getElementById('solo-name').value;
-                const groupName = document.getElementById('group-name').value;
-                const participants = [];
-                
-                for (let i = 1; i <= 5; i++) {
-                    const participant = document.getElementById(`participant${i}`).value;
-                    if (participant.trim()) {
-                        participants.push(participant);
-                    }
-                }
-                
-                let songName = '';
-                let playbackInfo = '';
-                
-                if (document.querySelector('input[name="song_selection"]:checked').value === 'from_list') {
-                    songName = selectedSongInput.value;
-                    
-                    const playbackType = document.querySelector('input[name="playback_type"]:checked').value;
-                    if (playbackType === 'from_table') {
-                        const version = document.querySelector('input[name="song_version"]:checked').value;
-                        playbackInfo = `פלייבייק מטבלה (${version.replace('version', 'גרסה ')})`;
-                    } else {
-                        playbackInfo = 'פלייבייק עצמי';
-                    }
-                } else {
-                    songName = customSongInput.value;
-                    playbackInfo = 'פלייבייק עצמי';
-                }
-                
-                // Generate HTML for review
-                let reviewHTML = `
-                    <p><strong>מגיש/ה:</strong> ${applicantName}</p>
-                    <p><strong>כיתה:</strong> ${applicantClass}</p>
-                    <p><strong>טלפון:</strong> ${applicantPhone}</p>
-                    <p><strong>סוג השתתפות:</strong> ${participationType === 'solo' ? 'סולו' : 'הרכב'}</p>
-                `;
-                
-                if (participationType === 'solo') {
-                    reviewHTML += `<p><strong>שם הסולן/ית:</strong> ${soloName}</p>`;
-                } else {
-                    reviewHTML += `<p><strong>שם ההרכב:</strong> ${groupName}</p>`;
-                    if (participants.length > 0) {
-                        reviewHTML += `<p><strong>משתתפים:</strong><br>`;
-                        participants.forEach(participant => {
-                            reviewHTML += `&nbsp;&nbsp;• ${participant}<br>`;
-                        });
-                        reviewHTML += `</p>`;
-                    }
-                }
-                
-                reviewHTML += `<p><strong>שיר:</strong> ${songName}</p>`;
-                reviewHTML += `<p><strong>סוג פלייבייק:</strong> ${playbackInfo}</p>`;
-                
-                reviewContainer.innerHTML = reviewHTML;
             }
             
             // Form submission handler
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
                 // Check if form is closed
-                if (formClosed) {
+                if (!formState.isFormOpen) {
+                    e.preventDefault();
                     alert('תקופת ההרשמה הסתיימה. לא ניתן להגיש מועמדות.');
                     return;
                 }
                 
                 // Check agreement with terms
                 if (!document.getElementById('agree-terms').checked) {
+                    e.preventDefault();
                     alert('עליך להסכים למדיניות הפרטיות ותנאי השימוש.');
                     return;
                 }
                 
-                // Collect form data
-                const formData = new FormData(form);
-                
-                // Add additional data
-                if (document.querySelector('input[name="participation_type"]:checked').value === 'solo') {
-                    formData.append('solo_or_group', 'סולו');
-                    formData.append('solo_name', document.getElementById('solo-name').value);
-                } else {
-                    formData.append('solo_or_group', 'הרכב');
-                    formData.append('group_name', document.getElementById('group-name').value);
-                    
-                    // Add participants
-                    for (let i = 1; i <= 5; i++) {
-                        const participant = document.getElementById(`participant${i}`).value;
-                        if (participant.trim()) {
-                            formData.append(`participant_${i}`, participant);
-                        }
-                    }
+                // If song is not in list, make sure custom song is filled
+                if (songSelect.value === 'not_in_list' && !customSongInput.value.trim()) {
+                    e.preventDefault();
+                    alert('נא לציין את שם השיר.');
+                    customSongInput.focus();
+                    return;
                 }
                 
-                // Add song information
-                if (document.querySelector('input[name="song_selection"]:checked').value === 'from_list') {
-                    formData.append('song', selectedSongInput.value);
-                    
-                    // Add playback info
-                    const playbackType = document.querySelector('input[name="playback_type"]:checked').value;
-                    formData.append('playback_type', playbackType);
-                    
-                    if (playbackType === 'from_table') {
-                        const version = document.querySelector('input[name="song_version"]:checked').value;
-                        formData.append('song_version', version);
-                    }
-                } else {
-                    formData.append('song', customSongInput.value);
-                    formData.append('custom_song', 'כן');
-                    formData.append('playback_type', 'פלייבייק עצמי');
-                }
-                
-                // Submit form via SubmitForms
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // Show success message
-                        form.style.display = 'none';
-                        document.querySelector('.stage-indicator').style.display = 'none';
-                        successMessage.style.display = 'block';
-                    } else {
-                        alert('אירעה שגיאה בשליחת הטופס. נא לנסות שוב.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('אירעה שגיאה בשליחת הטופס. נא לנסות שוב.');
-                });
+                // Form will submit normally to FormSubmit
             });
             
             // New application button
@@ -1296,13 +1154,15 @@
                 // Reset form
                 form.reset();
                 
-                // Reset state
-                document.querySelectorAll('#song-list li').forEach(item => {
-                    item.classList.remove('selected');
-                });
-                selectedSongInput.value = '';
-                playbackSection.classList.add('hidden');
-                versionOptions.classList.add('hidden');
+                // Reset form state
+                formState.data = {};
+                formState.currentStage = 0;
+                
+                // Reset UI
+                customSongSection.classList.add('hidden');
+                playbackSection.classList.remove('hidden');
+                soloSection.style.display = 'block';
+                groupSection.classList.add('hidden');
                 
                 // Show form and stage indicator
                 form.style.display = 'block';
@@ -1311,27 +1171,12 @@
                 
                 // Return to first stage
                 goToStage(0);
-                
-                // Reset stage styles
-                stages.forEach((stageElement, index) => {
-                    stageElement.classList.remove('active', 'completed');
-                    if (index === 0) {
-                        stageElement.classList.add('active');
-                    }
-                });
             });
             
             // Initialize
-            // Select first song by default
-            if (songList.firstChild) {
-                songList.firstChild.classList.add('selected');
-                selectedSongInput.value = songList.firstChild.dataset.value;
-                
-                // Show playback options for first song (not "not in list")
-                if (songList.firstChild.dataset.number !== '99') {
-                    playbackSection.classList.remove('hidden');
-                }
-            }
+            // Set default participation type
+            const defaultParticipation = document.querySelector('input[name="participation_type"]:checked');
+            formState.updateData('participation_type', defaultParticipation.value);
         });
     </script>
 </body>
