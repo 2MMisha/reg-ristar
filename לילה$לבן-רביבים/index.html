@@ -857,7 +857,7 @@
             const daysElement = document.getElementById('days');
             const hoursElement = document.getElementById('hours');
             const minutesElement = document.getElementById('minutes');
-            const secondsElement = document.getElementById('seconds');
+            
             
             // Song list from the provided data
             const songs = [
@@ -945,7 +945,7 @@
         daysElement.textContent = '00';
         hoursElement.textContent = '00';
         minutesElement.textContent = '00';
-        secondsElement.textContent = '00';
+        
         
         // Show form closed overlay
         if (!formClosed) {
@@ -971,13 +971,13 @@
     const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
     const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
     const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    
     
     // Update display
     daysElement.textContent = days < 10 ? '0' + days : days;
     hoursElement.textContent = hours < 10 ? '0' + hours : hours;
     minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
-    secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
+    
     
     // Ensure form is open (if it was previously closed)
     if (formClosed) {
@@ -1000,7 +1000,7 @@
             updateCountdown();
             
             // Update countdown every second
-            setInterval(updateCountdown, 1000);
+        
             
             // Current stage
             let currentStage = 0;
