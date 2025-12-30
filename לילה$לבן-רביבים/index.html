@@ -941,49 +941,65 @@
             
             // Update countdown timer
             function updateCountdown() {
-                const now = new Date().getTime();
-                const timeLeft = deadline - now;
-                
-                if (timeLeft <= 0) {
-                    // Deadline has passed
-                    daysElement.textContent = '00';
-                    hoursElement.textContent = '00';
-                    minutesElement.textContent = '00';
-                    secondsElement.textContent = '00';
-                    
-                    // Show form closed overlay
-                    if (!formClosed) {
-                        formClosedOverlay.classList.remove('hidden');
-                        formClosed = true;
-                        
-                        // Disable form submission
-                        submitBtn.disabled = true;
-                        submitBtn.style.opacity = '0.5';
-                        submitBtn.style.cursor = 'not-allowed';
-                        
-                        // Disable all form inputs
-                        const formInputs = form.querySelectorAll('input, button, select, textarea');
-                        formInputs.forEach(input => {
-                            input.disabled = true;
-                        });
-                    }
-                    
-                    return;
-                }
-                
-                // Calculate days, hours, minutes, seconds
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-                
-                // Update display
-                daysElement.textContent = days < 10 ? '0' + days : days;
-                hoursElement.textContent = hours < 10 ? '0' + hours : hours;
-                minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
-                secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
-            }
+    const now = new Date().getTime();
+    const timeLeft = deadline - now;
+    
+    if (timeLeft <= 0) {
+        // Deadline has passed
+        daysElement.textContent = '00';
+        hoursElement.textContent = '00';
+        minutesElement.textContent = '00';
+        secondsElement.textContent = '00';
+        
+        // Show form closed overlay
+        if (!formClosed) {
+            formClosedOverlay.classList.remove('hidden');
+            formClosed = true;
             
+            // Disable form submission
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            submitBtn.style.cursor = 'not-allowed';
+            
+            // Disable all form inputs
+            const formInputs = form.querySelectorAll('input, button, select, textarea');
+            formInputs.forEach(input => {
+                input.disabled = true;
+            });
+        }
+        
+        return;
+    }
+    
+    // Calculate days, hours, minutes, seconds
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    
+    // Update display
+    daysElement.textContent = days < 10 ? '0' + days : days;
+    hoursElement.textContent = hours < 10 ? '0' + hours : hours;
+    minutesElement.textContent = minutes < 10 ? '0' + minutes : minutes;
+    secondsElement.textContent = seconds < 10 ? '0' + seconds : seconds;
+    
+    // Ensure form is open (if it was previously closed)
+    if (formClosed) {
+        formClosedOverlay.classList.add('hidden');
+        formClosed = false;
+        
+        // Enable form submission
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        submitBtn.style.cursor = 'pointer';
+        
+        // Enable all form inputs
+        const formInputs = form.querySelectorAll('input, button, select, textarea');
+        formInputs.forEach(input => {
+            input.disabled = false;
+        });
+    }
+}
             // Initial countdown update
             updateCountdown();
             
